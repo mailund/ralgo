@@ -1,5 +1,30 @@
 # This file contains some basic data structures that the
-# abstract data structures elsewhere are based upon.
+# abstract data structures elsewhere are based upon, plus some generic functions
+# used by all data structures
+
+#' Test if a data structure is empty
+#' @param x The data structure
+#' @return TRUE if x is empty.
+#' @export
+is_empty <- function(x) UseMethod("is_empty")
+
+#' Insert a value into a data structure.
+#' @param x The data structure
+#' @param elm The element
+#' @param ... Potential optional arguments
+#' @return The updated data structure
+#' @export
+insert <- function(x, elm, ...) UseMethod("insert")
+
+#' Merge two data structures (of the same kind)
+#' @param x The first data structure
+#' @param y The second data structure
+#' @param ... Potential optional arguments
+#' @return the merged x and y
+#' @export
+merge <- function(x, y, ...) UseMethod("merge")
+
+## Linked lists #########################
 
 #' Create an empty linked list.
 #' @return an empty linked list.
@@ -48,6 +73,7 @@ list_length <- function(lst) {
 #' @param ... Additional parameters. Not used but part of the generic interface.
 #' @return An R list with the elements found in the linked list.
 #' @method as.list linked_list
+#' @export
 as.list.linked_list <- function(x, ...) {
   n <- list_length(x)
   result <- vector(mode = "list", length = n)
@@ -67,6 +93,7 @@ as.list.linked_list <- function(x, ...) {
 #'             The default will be a list
 #' @return An R vector with the elements found in the linked list.
 #' @method as.vector linked_list
+#' @export
 as.vector.linked_list <- function(x, mode = "any") {
   as.vector(as.list(x), mode)
 }
