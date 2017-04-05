@@ -11,7 +11,7 @@ empty_list <- function() NULL
 #' @param elem  The item to put at the head of the list.
 #' @return a new linked list.
 #' @export
-list_concat_head <- function(lst, elem)
+list_cons <- function(lst, elem)
   structure(list(item = elem, tail = lst), class = "linked_list")
 
 #' Get the item at the head of a linked list.
