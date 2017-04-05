@@ -2,6 +2,8 @@
 # abstract data structures elsewhere are based upon, plus some generic functions
 # used by all data structures
 
+## Generic functions for general data structures ###########################
+
 #' Test if a data structure is empty
 #' @param x The data structure
 #' @return TRUE if x is empty.
@@ -23,6 +25,16 @@ insert <- function(x, elm, ...) UseMethod("insert")
 #' @return the merged x and y
 #' @export
 merge <- function(x, y, ...) UseMethod("merge")
+
+#' Check membership in a data structure
+#' @param x The data structure
+#' @param elm Element to check membership for
+#' @param ... Potential optional arguments
+#' @return the merged x and y
+#' @export
+member <- function(x, elm, ...) UseMethod("member")
+
+
 
 ## Linked lists #########################
 
@@ -97,4 +109,22 @@ as.list.linked_list <- function(x, ...) {
 as.vector.linked_list <- function(x, mode = "any") {
   as.vector(as.list(x), mode)
 }
+
+
+## Helper functions ##############################
+pattern_match <- function(...) {
+  bindings <- eval(substitute(alist(...)))
+  scope <- parent.frame()
+
+  var_names <- names(bindings)
+  for (i in seq_along(bindings)) {
+    name <- var_names[i]
+    val <- eval(bindings[[i]], scope)
+    if (is.null(val)) return(FALSE)
+
+    assign(name, val, envir = scope)
+  }
+  return(TRUE)
+}
+
 
