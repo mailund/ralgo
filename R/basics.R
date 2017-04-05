@@ -7,11 +7,11 @@
 empty_list <- function() NULL
 
 #' Add a head item to a linked list.
-#' @param lst   The list -- it will become the tail of the new list.
 #' @param elem  The item to put at the head of the list.
+#' @param lst   The list -- it will become the tail of the new list.
 #' @return a new linked list.
 #' @export
-list_cons <- function(lst, elem)
+list_cons <- function(elem, lst)
   structure(list(item = elem, tail = lst), class = "linked_list")
 
 #' Get the item at the head of a linked list.

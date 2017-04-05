@@ -4,12 +4,12 @@
 \alias{list_cons}
 \title{Add a head item to a linked list.}
 \usage{
-list_cons(lst, elem)
+list_cons(elem, lst)
 }
 \arguments{
-\item{lst}{The list -- it will become the tail of the new list.}
-
 \item{elem}{The item to put at the head of the list.}
+
+\item{lst}{The list -- it will become the tail of the new list.}
 }
 \value{
 a new linked list.
