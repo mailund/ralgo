@@ -18,7 +18,7 @@ red_black_tree_node <- function(
 }
 
 # special node for empty trees
-empty_red_black_tree_node = red_black_tree_node(RED, NA, NULL, NULL)
+empty_red_black_tree_node = red_black_tree_node(BLACK, NA, NULL, NULL)
 
 #' Create empty red-black search tree
 #' @return New, empty, red-black search tree
@@ -32,29 +32,31 @@ is_empty.red_black_tree <- function(x) identical(x, empty_red_black_tree_node)
 
 
 rbt_balance <- function(colour, value, left, right) {
-  if (colour == BLACK) {
-    if (pattern_match(a = left$left, b = left$right$left,
-                      c = left$right$right, d = right,
-                      x = left$value, y = left$right$value, z = value)
+  if (pattern_match(a = left$left, b = left$right$left,
+                    c = left$right$right, d = right,
+                    x = left$value, y = left$right$value, z = value,
+                    colour == BLACK, left$colour == RED, left$right$colour == RED)
 
-        || pattern_match(a = left$left$left, b = left$left$right,
-                         c = left$right, d = right,
-                         x = left$left$value, y = left$value, z = value)
+      || pattern_match(a = left$left$left, b = left$left$right,
+                       c = left$right, d = right,
+                       x = left$left$value, y = left$value, z = value,
+                       colour == BLACK, left$colour == RED, left$left$colour == RED)
 
-        || pattern_match(a = left, b = right$left,
-                         c = right$right$left, d = right$right$right,
-                         x = value, y = right$value, z = right$right$value)
+      || pattern_match(a = left, b = right$left,
+                       c = right$right$left, d = right$right$right,
+                       x = value, y = right$value, z = right$right$value,
+                       colour == BLACK, right$colour == RED, right$right$colour == RED)
 
-        || pattern_match(a = left, b = right$left$left,
-                         c = right$left$right, d = right$right,
-                         x = value, y = right$left$value, z = right$value)
-        )
+      || pattern_match(a = left, b = right$left$left,
+                       c = right$left$right, d = right$right,
+                       x = value, y = right$left$value, z = right$value,
+                       colour == BLACK, right$colour == RED, right$left$colour == RED)
+      )
       return(red_black_tree_node(colour = RED, value = y,
                                  left = red_black_tree_node(colour = BLACK, value = x,
                                                             left = a, right = b),
                                  right = red_black_tree_node(colour = BLACK, value = z,
                                                              left = c, right = d)))
-  }
 
   red_black_tree_node(colour = colour, value = value,
                       left = left, right = right)

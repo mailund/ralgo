@@ -10,7 +10,7 @@ find_minimal(heap)
 \item{heap}{The heap}
 }
 \value{
-the minimal value in the heap
+The minimal value in the heap
 }
 \description{
 Get the minimal value in a heap
