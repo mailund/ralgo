@@ -34,6 +34,13 @@ merge <- function(x, y, ...) UseMethod("merge")
 #' @export
 member <- function(x, elm, ...) UseMethod("member")
 
+#' Remove an element from a data structure
+#' @param x The data structure
+#' @param elm Element to remove
+#' @param ... Potential optional arguments
+#' @return x with elm removed
+#' @export
+remove <- function(x, elm, ...) UseMethod("remove")
 
 
 ## Linked lists #########################
@@ -125,7 +132,7 @@ pattern_match <- function(...) {
 
     # for expressions that are not assignments, we consider them conditions
     # that must be true for the pattern to match. Return FALSE if they are not.
-    if (nchar(name) == 0 && !val)return(FALSE)
+    if (nchar(name) == 0 && !val) return(FALSE)
     else if (nchar(name) > 0) assign(name, val, envir = scope)
 
   }

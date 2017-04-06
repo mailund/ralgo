@@ -18,7 +18,7 @@ red_black_tree_node <- function(
 }
 
 # special node for empty trees
-empty_red_black_tree_node = red_black_tree_node(BLACK, NA, NULL, NULL)
+empty_red_black_tree_node = red_black_tree_node(RED, NA, NULL, NULL)
 
 #' Create empty red-black search tree
 #' @return New, empty, red-black search tree
@@ -61,11 +61,11 @@ rbt_balance <- function(colour, value, left, right) {
   red_black_tree_node(colour = colour, value = value,
                       left = left, right = right)
 }
+
 rbt_insert <- function(tree, elm) {
   if (is_empty(tree)) return(red_black_tree_node(RED, elm))
   if (elm < tree$value)
-    rbt_balance(tree$colour, tree$value,
-                rbt_insert(tree$left, elm), tree$right)
+    rbt_balance(tree$colour, tree$value, rbt_insert(tree$left, elm), tree$right)
   else if (elm > tree$value)
     rbt_balance(tree$colour, tree$value, tree$left, rbt_insert(tree$right, elm))
   else
@@ -77,7 +77,7 @@ rbt_insert <- function(tree, elm) {
 insert.red_black_tree <- function(x, elm, ...) {
   # insert the value in the tree and set the root to be black
   new_tree <- rbt_insert(x, elm)
-  new_tree$colour = BLACK
+  new_tree$colour <- BLACK
   new_tree
 }
 
@@ -91,3 +91,79 @@ member.red_black_tree <- function(x, elm, ...) {
   else member(x$right, elm)
 }
 
+rbt_leftmost <- function(tree) {
+  while (!is_empty(tree)) {
+    value <- tree$value
+    tree <- tree$left
+  }
+  value
+}
+
+rbt_remove <- function(tree, elm) { # FIXME: rebalancing not done correctly yet
+  # if we reach an empty tree, there is nothing to do
+  if (is_empty(tree)) return(tree)
+
+  # # the element might have zero children
+  # if (pattern_match(a = tree$left, b = tree$right,
+  #                   !is_empty(a), !is_empty(b),
+  #                   a$value == elm,
+  #                   is_empty(a$left), is_empty(a$right))) {
+  #   return(red_black_tree_node(tree$colour, tree$value, empty_red_black_tree(), b))
+  # }
+  # if (pattern_match(a = tree$left, b = tree$right,
+  #                   !is_empty(a), !is_empty(b),
+  #                   b$value == elm,
+  #                   is_empty(b$left), is_empty(b$right))) {
+  #   return(red_black_tree_node(tree$colour, tree$value, a, empty_red_black_tree()))
+  # }
+  #
+  # # the element might have one child
+  # if (pattern_match(a = tree$left$left, b = tree$right,
+  #                   tree$left$value == elm,
+  #                   !is_empty(a), !is_empty(b), is_empty(tree$left$right))
+  #
+  #     || pattern_match(a = tree$left$right, b = tree$right,
+  #                      tree$left$value == elm,
+  #                      !is_empty(a), !is_empty(b), is_empty(tree$left$left))
+  #
+  #     || pattern_match(a = tree$left, b = tree$right$left,
+  #                      tree$right$value == elm,
+  #                      !is_empty(a), !is_empty(b), is_empty(tree$right$right))
+  #
+  #     || pattern_match(a = tree$left, b = tree$right$right,
+  #                      tree$right$value == elm,
+  #                      !is_empty(a), !is_empty(b), is_empty(tree$right$left))) {
+  #   return(red_black_tree_node(tree$colour, tree$value, a, b))
+  # }
+
+  if (tree$value == elm) {
+    a <- tree$left
+    b <- tree$right
+    if (is_empty(a)) return(b)
+    if (is_empty(b)) return(a)
+    s <- rbt_leftmost(tree)
+    return(rbt_balance(tree$colour, s, a, rbt_remove(b, s)))
+  }
+
+  # # element is found at an inner node
+  # if (tree$value == elm) {
+  #   s <- rbt_leftmost(tree)
+  #   a <- tree$left
+  #   b <- tree$right
+  #   return(rbt_balance(tree$colour, s, a, rbt_remove(b, s)))
+  # }
+
+  # we need to search further down to remove the element
+  if (elm < tree$value)
+    rbt_balance(tree$colour, tree$value, rbt_remove(tree$left, elm), tree$right)
+  else # (elm > tree$value)
+    rbt_balance(tree$colour, tree$value, tree$left, rbt_remove(tree$right, elm))
+}
+
+#' @method remove red_black_tree
+#' @export
+remove.red_black_tree <- function(x, elm, ...) {
+  new_tree <- rbt_remove(x, elm)
+  new_tree$colour <- BLACK
+  new_tree
+}
