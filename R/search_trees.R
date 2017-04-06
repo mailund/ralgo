@@ -1,5 +1,91 @@
 ## Generic functions for search trees ###############
 
+## unbalanced search tree ############################
+search_tree_node <- function(
+  value
+  , left = empty_search_tree()
+  , right = empty_search_tree()
+) {
+  structure(list(left = left, value = value, right = right),
+            class = c("unbalanced_search_tree", "search_tree"))
+}
+
+# special node for empty trees
+empty_search_tree_node = search_tree_node(NA, NULL, NULL)
+
+#' Create empty unbalanced search tree
+#' @return New empty, unbalanced, search tree
+#' @export
+empty_search_tree <- function() empty_search_tree_node
+
+#' Check if an unbalanced search tree is empty
+#' @method is_empty unbalanced_search_tree
+#' @export
+is_empty.unbalanced_search_tree <- function(x) identical(x, empty_search_tree_node)
+
+
+st_insert <- function(tree, elm) {
+  if (is_empty(tree)) return(search_tree_node(elm))
+  if (elm < tree$value)
+    search_tree_node(tree$value, st_insert(tree$left, elm), tree$right)
+  else if (elm > tree$value)
+    search_tree_node(tree$value, tree$left, st_insert(tree$right, elm))
+  else
+    tree # the value is already in the tree, at this level, so just return
+}
+
+#' @method insert unbalanced_search_tree
+#' @export
+insert.unbalanced_search_tree <- function(x, elm, ...) {
+  st_insert(x, elm)
+}
+
+#' @method member unbalanced_search_tree
+#' @export
+member.unbalanced_search_tree <- function(x, elm, ...) {
+  if (is_empty(x)) return(FALSE)
+  if (x$value == elm) return(TRUE)
+
+  if (elm < x$value) member(x$left, elm)
+  else member(x$right, elm)
+}
+
+st_leftmost <- function(tree) {
+  while (!is_empty(tree)) {
+    value <- tree$value
+    tree <- tree$left
+  }
+  value
+}
+
+st_remove <- function(tree, elm) {
+  # if we reach an empty tree, there is nothing to do
+  if (is_empty(tree)) return(tree)
+
+  if (tree$value == elm) {
+    a <- tree$left
+    b <- tree$right
+    if (is_empty(a)) return(b)
+    if (is_empty(b)) return(a)
+
+    s <- st_leftmost(tree)
+    return(search_tree_node(s, a, st_remove(b, s)))
+  }
+
+  # we need to search further down to remove the element
+  if (elm < tree$value)
+    search_tree_node(tree$value, st_remove(tree$left, elm), tree$right)
+  else # (elm > tree$value)
+    search_tree_node(tree$value, tree$left, st_remove(tree$right, elm))
+}
+
+#' @method remove unbalanced_search_tree
+#' @export
+remove.unbalanced_search_tree <- function(x, elm, ...) {
+  st_remove(x, elm)
+}
+
+
 ## Red-Black search tree ############################
 
 # colours
@@ -51,15 +137,15 @@ rbt_balance <- function(colour, value, left, right) {
                        c = right$left$right, d = right$right,
                        x = value, y = right$left$value, z = right$value,
                        colour == BLACK, right$colour == RED, right$left$colour == RED)
-      )
-      return(red_black_tree_node(colour = RED, value = y,
-                                 left = red_black_tree_node(colour = BLACK, value = x,
-                                                            left = a, right = b),
-                                 right = red_black_tree_node(colour = BLACK, value = z,
-                                                             left = c, right = d)))
+  ) {
 
-  red_black_tree_node(colour = colour, value = value,
-                      left = left, right = right)
+    left <- red_black_tree_node(colour = BLACK, value = x, left = a, right = b)
+    right <- red_black_tree_node(colour = BLACK, value = z, left = c, right = d)
+    red_black_tree_node(colour = RED, value = y, left, right)
+
+  } else {
+    red_black_tree_node(colour, value, left, right)
+  }
 }
 
 rbt_insert <- function(tree, elm) {
@@ -91,13 +177,7 @@ member.red_black_tree <- function(x, elm, ...) {
   else member(x$right, elm)
 }
 
-rbt_leftmost <- function(tree) {
-  while (!is_empty(tree)) {
-    value <- tree$value
-    tree <- tree$left
-  }
-  value
-}
+rbt_leftmost <- st_leftmost
 
 rbt_remove <- function(tree, elm) { # FIXME: rebalancing not done correctly yet
   # if we reach an empty tree, there is nothing to do
@@ -141,6 +221,7 @@ rbt_remove <- function(tree, elm) { # FIXME: rebalancing not done correctly yet
     b <- tree$right
     if (is_empty(a)) return(b)
     if (is_empty(b)) return(a)
+
     s <- rbt_leftmost(tree)
     return(rbt_balance(tree$colour, s, a, rbt_remove(b, s)))
   }
