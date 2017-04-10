@@ -56,6 +56,7 @@ list_cons <- function(elem, lst)
 list_nil <- list_cons(NA, NULL)
 
 #' @method is_empty linked_list
+#' @export
 is_empty.linked_list <- function(x) identical(x, list_nil)
 
 #' Create an empty linked list.
@@ -112,6 +113,14 @@ list_concatenate <- function(l1, l2) {
       rev_l1 <- list_tail(rev_l1)
     }
     result
+}
+
+#' @method remove linked_list
+#' @export
+remove.linked_list <- function(x, elm, ...) {
+  if (is_empty(x)) x
+  else if (list_head(x) == elm) list_tail(x)
+  else list_cons(list_head(x), remove(list_tail(x), elm))
 }
 
 #' Translate a linked list into an R list.

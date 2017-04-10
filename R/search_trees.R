@@ -40,12 +40,18 @@ insert.unbalanced_search_tree <- function(x, elm, ...) {
   st_insert(x, elm)
 }
 
+st_member <- function(x, elm, candidate = NA) {
+  if (is_empty(x)) return(!is.na(candidate) && elm == candidate)
+  if (elm < x$value) st_member(x$left, elm, candidate)
+  else st_member(x$right, elm, x$value)
+}
+
 #' @method member unbalanced_search_tree
 #' @export
 member.unbalanced_search_tree <- function(x, elm, ...) {
+  return(st_member(x, elm))
   if (is_empty(x)) return(FALSE)
   if (x$value == elm) return(TRUE)
-
   if (elm < x$value) member(x$left, elm)
   else member(x$right, elm)
 }

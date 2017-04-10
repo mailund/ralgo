@@ -12,3 +12,9 @@ test_that("We can concatenate two lists", {
   lst <- list_concatenate(l1, l2)
   expect_equal(as.vector(lst, "integer"), 1:6)
 })
+
+test_that("We can remove elements from lists", {
+  lst <- list_cons(1, list_cons(2, list_cons(3, empty_list())))
+  lst <- remove(lst, 2)
+  expect_equal(as.vector(lst, "integer"), c(1,3))
+})
