@@ -65,6 +65,8 @@ insert.tree_bag <- function(x, elm, ...) {
 #' @method merge tree_bag
 #' @export
 merge.tree_bag <- function(x, y) {
+  if (is_empty(x)) return(y)
+  if (is_empty(y)) return(x)
   bag_node(NA, x, y)
 }
 
