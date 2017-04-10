@@ -15,4 +15,3 @@ The element at the head of the list.
 \description{
 Get the item at the head of a linked list.
 }
-

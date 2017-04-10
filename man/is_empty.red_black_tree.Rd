@@ -9,4 +9,3 @@
 \description{
 Check if a red-black search tree is empty
 }
-

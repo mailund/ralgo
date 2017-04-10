@@ -45,11 +45,6 @@ remove <- function(x, elm, ...) UseMethod("remove")
 
 ## Linked lists #########################
 
-#' Create an empty linked list.
-#' @return an empty linked list.
-#' @export
-empty_list <- function() NULL
-
 #' Add a head item to a linked list.
 #' @param elem  The item to put at the head of the list.
 #' @param lst   The list -- it will become the tail of the new list.
@@ -57,6 +52,17 @@ empty_list <- function() NULL
 #' @export
 list_cons <- function(elem, lst)
   structure(list(item = elem, tail = lst), class = "linked_list")
+
+list_nil <- list_cons(NA, NULL)
+
+#' @method is_empty linked_list
+is_empty.linked_list <- function(x) identical(x, list_nil)
+
+#' Create an empty linked list.
+#' @return an empty linked list.
+#' @export
+empty_list <- function() list_nil
+
 
 #' Get the item at the head of a linked list.
 #' @param lst The list
@@ -79,11 +85,33 @@ list_tail <- function(lst) lst$tail
 #' @export
 list_length <- function(lst) {
   n <- 0
-  while (!is.null(lst)) {
+  while (!is_empty(lst)) {
     lst <- lst$tail
     n <- n + 1
   }
   n
+}
+
+#' Construct a list that is the concatenation of two other lists.
+#'
+#' This function is linear in the length of the first list.
+#'
+#' @param l1 The first list.
+#' @param l2 The second list.
+#' @return The concatenation of l1 and l2.
+#' @export
+list_concatenate <- function(l1, l2) {
+    rev_l1 <- empty_list()
+    while (!is_empty(l1)) {
+      rev_l1 <- list_cons(list_head(l1), rev_l1)
+      l1 <- list_tail(l1)
+    }
+    result <- l2
+    while (!is_empty(rev_l1)) {
+      result <- list_cons(list_head(rev_l1), result)
+      rev_l1 <- list_tail(rev_l1)
+    }
+    result
 }
 
 #' Translate a linked list into an R list.
@@ -97,7 +125,7 @@ as.list.linked_list <- function(x, ...) {
   n <- list_length(x)
   result <- vector(mode = "list", length = n)
   i <- 1
-  while (!is.null(x)) {
+  while (!is_empty(x)) {
     result[i] <- x$item
     x <- x$tail
     i <- i + 1
