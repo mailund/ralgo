@@ -19,7 +19,7 @@ pop <- function(x) UseMethod("pop")
 top <- function(x) UseMethod("top")
 
 stack_cons <- function(elem, lst)
-  structure(list(item = elem, tail = lst),
+  structure(list(head = elem, tail = lst),
             class = c("stack", "linked_list"))
 
 stack_nil <- stack_cons(NA, NULL)

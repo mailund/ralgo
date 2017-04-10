@@ -51,7 +51,7 @@ remove <- function(x, elm, ...) UseMethod("remove")
 #' @return a new linked list.
 #' @export
 list_cons <- function(elem, lst)
-  structure(list(item = elem, tail = lst), class = "linked_list")
+  structure(list(head = elem, tail = lst), class = "linked_list")
 
 list_nil <- list_cons(NA, NULL)
 
@@ -69,7 +69,7 @@ empty_list <- function() list_nil
 #' @param lst The list
 #' @return The element at the head of the list.
 #' @export
-list_head <- function(lst) lst$item
+list_head <- function(lst) lst$head
 
 #' Get the tail of a linked list.
 #' @param lst The list
@@ -148,7 +148,7 @@ as.list.linked_list <- function(x, ...) {
   result <- vector(mode = "list", length = n)
   i <- 1
   while (!is_empty(x)) {
-    result[i] <- x$item
+    result[i] <- x$head
     x <- x$tail
     i <- i + 1
   }

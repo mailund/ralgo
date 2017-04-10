@@ -6,7 +6,7 @@
 #' @return a new bag.
 #' @export
 bag_cons <- function(elem, lst)
-  structure(list(item = elem, tail = lst), class = c("list_bag", "linked_list"))
+  structure(list(head = elem, tail = lst), class = c("list_bag", "linked_list"))
 
 bag_nil <- bag_cons(NA, NULL)
 

@@ -65,7 +65,7 @@ empty_queue <- function() queue_closure()
 
 #' @method is_empty queue
 #' @export
-is_empty.queue <- function(x) x$queue_is_empty()
+is_empty.queue <- function(x) x$is_empty()
 
 #' @method enqueue queue
 #' @export
@@ -83,4 +83,48 @@ front.queue <- function(x) x$front()
 dequeue.queue <- function(x) {
   x$dequeue()
   x
+}
+
+
+
+queue_extended <- function(x, front, back)
+  structure(list(x = x, front = front, back = back),
+            class = "extended_queue")
+
+
+#' Construct an empty extended queue
+#'
+#' This is just a queue that doesn't use a closure to be able to update
+#' the data structure when front is called.
+#'
+#' @return an empty queue
+#' @export
+empty_extended_queue <- function() queue_extended(NA, empty_list(), empty_list())
+
+#' @method is_empty extended_queue
+#' @export
+is_empty.extended_queue <- function(x)
+  is_empty(x$front) && is_empty(x$back)
+
+#' @method enqueue extended_queue
+#' @export
+enqueue.extended_queue <- function(x, elm)
+  queue_extended(ifelse(is_empty(x$back), elm, x$x),
+                 x$front, list_cons(elm, x$back))
+
+#' @method front extended_queue
+#' @export
+front.extended_queue <- function(x) {
+  if (is_empty(x)) stop("Taking the front of an empty list")
+  if (is_empty(x$front)) x$x
+  else list_head(x$front)
+}
+
+#' @method dequeue extended_queue
+#' @export
+dequeue.extended_queue <- function(x) {
+  if (is_empty(x)) stop("Taking the front of an empty list")
+  if (is_empty(x$front))
+    x <- queue_extended(x$x, list_reverse(x$back), empty_list())
+  queue_extended(NA, list_tail(x$front), x$back)
 }
