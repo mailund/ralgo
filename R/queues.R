@@ -17,36 +17,70 @@ front <- function(x) UseMethod("front")
 #' @param x The queue
 #' @return The updated queue
 #' @export
-dequeue <- function(x) UseMethod("dequeu")
+dequeue <- function(x) UseMethod("dequeue")
 
 queue <- function(front, back)
   structure(list(front = front, back = back),
             class = "queue")
 
+queue_closure <- function() {
+  q <- queue(empty_list(), empty_list())
+
+  get_queue <- function() q
+
+  queue_is_empty <- function() is_empty(q$front) && is_empty(q$back)
+
+  enqueue <- function(elm) {
+    q <<- queue(q$front, list_cons(elm, q$back))
+  }
+
+  front <- function() {
+    if (queue_is_empty()) stop("Taking the front of an empty list")
+    if (is_empty(q$front)) {
+      q <<- queue(list_reverse(q$back), empty_list())
+    }
+    list_head(q$front)
+  }
+
+  dequeue <- function() {
+    if (queue_is_empty()) stop("Taking the front of an empty list")
+    if (is_empty(q$front)) {
+      q <<- queue(list_reverse(q$back), empty_list())
+    }
+    q$front <<- list_tail(q$front)
+  }
+
+  structure(list(is_empty = queue_is_empty,
+                 get_queue = get_queue,
+                 enqueue = enqueue,
+                 front = front,
+                 dequeue = dequeue),
+            class = "queue")
+}
+
 #' Construct an empty queue
 #' @return an empty queue
 #' @export
-empty_queue <- function()
-  queue(empty_list(), empty_list())
+empty_queue <- function() queue_closure()
 
 #' @method is_empty queue
 #' @export
-is_empty.queue <- function(x) is_empty(x$front) && is_empty(x$back)
+is_empty.queue <- function(x) x$queue_is_empty()
 
 #' @method enqueue queue
 #' @export
 enqueue.queue <- function(x, elm) {
-  queue(x$front, list_cons(elm, x$back))
+  x$enqueue(elm)
+  x
 }
 
 #' @method front queue
 #' @export
-front <- function(x) {
-  stop("I am not sure how to implement this yet")
-}
+front.queue <- function(x) x$front()
 
 #' @method dequeue queue
 #' @export
-dequeue <- function(x) {
-  stop("I am not sure how to implement this yet")
+dequeue.queue <- function(x) {
+  x$dequeue()
+  x
 }

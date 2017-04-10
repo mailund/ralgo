@@ -123,6 +123,19 @@ remove.linked_list <- function(x, elm, ...) {
   else list_cons(list_head(x), remove(list_tail(x), elm))
 }
 
+#' Reverse a list
+#' @param lst A list
+#' @return the reverse of lst
+#' @export
+list_reverse <- function(lst) {
+  acc <- empty_list()
+  while (!is_empty(lst)) {
+    acc <- list_cons(list_head(lst), acc)
+    lst <- list_tail(lst)
+  }
+  acc
+}
+
 #' Translate a linked list into an R list.
 #'
 #' @param x The linked list
