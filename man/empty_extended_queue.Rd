@@ -13,3 +13,4 @@ an empty queue
 This is just a queue that doesn't use a closure to be able to update
 the data structure when front is called.
 }
+

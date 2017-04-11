@@ -1,10 +1,5 @@
 # Bag data structures
 
-#' Add a head item to a linked list implementation of a bag.
-#' @param elem  The item to put at the head of the bag
-#' @param bag   The bag -- it will become the tail of the new list.
-#' @return a new bag.
-#' @export
 bag_cons <- function(elem, lst)
   structure(list(head = elem, tail = lst), class = c("list_bag", "linked_list"))
 
@@ -25,7 +20,7 @@ insert.list_bag <- function(x, elm, ...) bag_cons(elm, x)
 
 #' @method merge list_bag
 #' @export
-merge.list_bag <- function(x, y) {
+merge.list_bag <- function(x, y, ...) {
   result <- list_concatenate(x, y)
   class(result) <- c("list_bag", "linked_list")
   result
@@ -34,11 +29,6 @@ merge.list_bag <- function(x, y) {
 
 
 
-#' Add a head item to a tree implementation of a bag.
-#' @param elem  The item to put at the head of the bag
-#' @param bag   The bag -- it will become the tail of the new list.
-#' @return a new bag.
-#' @export
 bag_node <- function(elem, left, right)
   structure(list(item = elem, left = left, right = right),
             class = "tree_bag")
@@ -64,7 +54,7 @@ insert.tree_bag <- function(x, elm, ...) {
 
 #' @method merge tree_bag
 #' @export
-merge.tree_bag <- function(x, y) {
+merge.tree_bag <- function(x, y, ...) {
   if (is_empty(x)) return(y)
   if (is_empty(y)) return(x)
   bag_node(NA, x, y)
