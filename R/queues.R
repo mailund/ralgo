@@ -178,6 +178,6 @@ front.extended_queue <- function(x) {
 dequeue.extended_queue <- function(x) {
   if (is_empty(x)) stop("Taking the front of an empty list")
   if (is_empty(x$front))
-    x <- queue_extended(x$x, list_reverse(x$back), empty_list())
-  queue_extended(NA, list_tail(x$front), x$back)
+    x <- queue_extended(NA, list_reverse(x$back), empty_list())
+  queue_extended(x$x, list_tail(x$front), x$back)
 }
