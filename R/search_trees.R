@@ -18,7 +18,6 @@ empty_search_tree_node = search_tree_node(NA, NULL, NULL)
 #' @export
 empty_search_tree <- function() empty_search_tree_node
 
-#' Check if an unbalanced search tree is empty
 #' @method is_empty unbalanced_search_tree
 #' @export
 is_empty.unbalanced_search_tree <- function(x) identical(x, empty_search_tree_node)
@@ -117,13 +116,13 @@ empty_red_black_tree_node = red_black_tree_node(RED, NA, NULL, NULL)
 #' @export
 empty_red_black_tree <- function() empty_red_black_tree_node
 
-#' Check if a red-black search tree is empty
 #' @method is_empty red_black_tree
 #' @export
 is_empty.red_black_tree <- function(x) identical(x, empty_red_black_tree_node)
 
 
 rbt_balance <- function(colour, value, left, right) {
+  a <- b <- c <- d <- x <- y <- z <- NULL # Setting these to avoid warnings
   if (pattern_match(a = left$left, b = left$right$left,
                     c = left$right$right, d = right,
                     x = left$value, y = left$right$value, z = value,

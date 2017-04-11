@@ -12,3 +12,4 @@ an empty leftist heap
 \description{
 Construct an empty leftist heap
 }
+

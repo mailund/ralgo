@@ -19,3 +19,4 @@ the merged x and y
 \description{
 Merge two data structures (of the same kind)
 }
+

@@ -15,3 +15,4 @@ The updated queue
 \description{
 Remove the front element of a queue
 }
+

@@ -18,3 +18,4 @@ An R vector with the elements found in the bag.
 \description{
 Translate a tree bag into an R vector.
 }
+

@@ -12,3 +12,4 @@ an empty tree bag.
 \description{
 Create an empty tree bag.
 }
+
