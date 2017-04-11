@@ -19,9 +19,63 @@ front <- function(x) UseMethod("front")
 #' @export
 dequeue <- function(x) UseMethod("dequeue")
 
+
+
+## Environment queues #################################################
+
+queue_environment <- function(front, back) {
+  e <- new.env(parent = emptyenv())
+  e$front <- front
+  e$back <- back
+  class(e) <- c("env_queue", "environment")
+  e
+}
+
+#' Construct an empty closure based queue
+#' @return an empty queue
+#' @export
+empty_env_queue <- function()
+  queue_environment(empty_list(), empty_list())
+
+#' @method is_empty env_queue
+#' @export
+is_empty.env_queue <- function(x)
+  is_empty(x$front) && is_empty(x$back)
+
+#' @method enqueue env_queue
+#' @export
+enqueue.env_queue <- function(x, elm) {
+  x$back <- list_cons(elm, x$back)
+  x
+}
+
+#' @method front env_queue
+#' @export
+front.env_queue <- function(x) {
+  if (is_empty(x$front)) {
+    x$front <- list_reverse(x$back)
+    x$back <- empty_list()
+  }
+  list_head(x$front)
+}
+
+#' @method dequeue env_queue
+#' @export
+dequeue.env_queue <- function(x) {
+  if (is_empty(x$front)) {
+    x$front <- list_reverse(q$back)
+    x$back <- empty_list()
+  }
+  x$front <- list_tail(x$front)
+  x
+}
+
+
+
+## Closure queues #####################################################
+
 queue <- function(front, back)
-  structure(list(front = front, back = back),
-            class = "queue")
+  list(front = front, back = back)
 
 queue_closure <- function() {
   q <- queue(empty_list(), empty_list())
@@ -55,38 +109,37 @@ queue_closure <- function() {
                  enqueue = enqueue,
                  front = front,
                  dequeue = dequeue),
-            class = "queue")
+            class = "closure_queue")
 }
 
-#' Construct an empty queue
+#' Construct an empty closure based queue
 #' @return an empty queue
 #' @export
-empty_queue <- function() queue_closure()
+empty_closure_queue <- function() queue_closure()
 
-#' @method is_empty queue
+#' @method is_empty closure_queue
 #' @export
-is_empty.queue <- function(x) x$is_empty()
+is_empty.closure_queue <- function(x) x$is_empty()
 
-#' @method enqueue queue
+#' @method enqueue closure_queue
 #' @export
-enqueue.queue <- function(x, elm) {
+enqueue.closure_queue <- function(x, elm) {
   x$enqueue(elm)
   x
 }
 
-#' @method front queue
+#' @method front closure_queue
 #' @export
-front.queue <- function(x) x$front()
+front.closure_queue <- function(x) x$front()
 
-#' @method dequeue queue
+#' @method dequeue closure_queue
 #' @export
-dequeue.queue <- function(x) {
+dequeue.closure_queue <- function(x) {
   x$dequeue()
   x
 }
 
-
-
+## Extended (purely functional) queues ################################
 queue_extended <- function(x, front, back)
   structure(list(x = x, front = front, back = back),
             class = "extended_queue")
