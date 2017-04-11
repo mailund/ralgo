@@ -63,7 +63,7 @@ front.env_queue <- function(x) {
 #' @export
 dequeue.env_queue <- function(x) {
   if (is_empty(x$front)) {
-    x$front <- list_reverse(q$back)
+    x$front <- list_reverse(x$back)
     x$back <- empty_list()
   }
   x$front <- list_tail(x$front)
@@ -99,9 +99,10 @@ queue_closure <- function() {
   dequeue <- function() {
     if (queue_is_empty()) stop("Taking the front of an empty list")
     if (is_empty(q$front)) {
-      q <<- queue(list_reverse(q$back), empty_list())
+      q <<- queue(list_tail(list_reverse(q$back)), empty_list())
+    } else {
+      q <<- queue(list_tail(q$front), q$back)
     }
-    q$front <<- list_tail(q$front)
   }
 
   structure(list(is_empty = queue_is_empty,

@@ -12,4 +12,3 @@ an empty linked list.
 \description{
 Create an empty linked list.
 }
-

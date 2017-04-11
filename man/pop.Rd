@@ -15,4 +15,3 @@ The updated stack
 \description{
 Remove the top element from a stack.
 }
-
