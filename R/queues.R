@@ -182,3 +182,5 @@ dequeue.extended_queue <- function(x) {
     x <- queue_extended(NA, list_reverse(x$back), empty_list())
   queue_extended(x$x, list_tail(x$front), x$back)
 }
+
+

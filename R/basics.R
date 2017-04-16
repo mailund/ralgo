@@ -93,6 +93,35 @@ list_length <- function(lst) {
   n
 }
 
+#' Get a new list containing the first n elements of a list.
+#' @param lst A list
+#' @param n the number of elements to get
+#' @return a new list containing the first n elements of lst.
+#' @export
+list_get_n <- function(lst, n) {
+  l <- empty_list()
+  while (n > 0) {
+    l <- list_cons(list_head(lst), l)
+    lst <- list_tail(lst)
+    n <- n - 1
+  }
+  list_reverse(l)
+}
+
+#' Get a new list containing the elements when n elements have been removed from a list/
+#' @param lst A list
+#' @param n the number of elements to remove
+#' @return a new list containing the elements of lst except the first n
+#' @export
+list_drop_n <- function(lst, n) {
+  l <- lst
+  while (n > 0) {
+    l <- list_tail(l)
+    n <- n - 1
+  }
+  l
+}
+
 #' Construct a list that is the concatenation of two other lists.
 #'
 #' This function is linear in the length of the first list.
