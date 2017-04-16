@@ -2,18 +2,29 @@
 % Please edit documentation in R/basics.R
 \name{as.list.linked_list}
 \alias{as.list.linked_list}
+\alias{as.list.linked_list}
 \title{Translate a linked list into an R list.}
 \usage{
+\method{as.list}{linked_list}(x, ...)
+
 \method{as.list}{linked_list}(x, ...)
 }
 \arguments{
 \item{x}{The linked list}
 
 \item{...}{Additional parameters. Not used but part of the generic interface.}
+
+\item{x}{The linked list}
+
+\item{...}{Additional parameters. Not used but part of the generic interface.}
 }
 \value{
 An R list with the elements found in the linked list.
+
+An R list with the elements found in the linked list.
 }
 \description{
+Translate a linked list into an R list.
+
 Translate a linked list into an R list.
 }

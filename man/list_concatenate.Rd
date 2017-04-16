@@ -2,18 +2,29 @@
 % Please edit documentation in R/basics.R
 \name{list_concatenate}
 \alias{list_concatenate}
+\alias{list_concatenate}
 \title{Construct a list that is the concatenation of two other lists.}
 \usage{
+list_concatenate(l1, l2)
+
 list_concatenate(l1, l2)
 }
 \arguments{
 \item{l1}{The first list.}
 
 \item{l2}{The second list.}
+
+\item{l1}{The first list.}
+
+\item{l2}{The second list.}
 }
 \value{
 The concatenation of l1 and l2.
+
+The concatenation of l1 and l2.
 }
 \description{
+This function is linear in the length of the first list.
+
 This function is linear in the length of the first list.
 }

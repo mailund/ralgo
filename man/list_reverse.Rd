@@ -2,16 +2,25 @@
 % Please edit documentation in R/basics.R
 \name{list_reverse}
 \alias{list_reverse}
+\alias{list_reverse}
 \title{Reverse a list}
 \usage{
+list_reverse(lst)
+
 list_reverse(lst)
 }
 \arguments{
 \item{lst}{A list}
+
+\item{lst}{A list}
 }
 \value{
 the reverse of lst
+
+the reverse of lst
 }
 \description{
+Reverse a list
+
 Reverse a list
 }
