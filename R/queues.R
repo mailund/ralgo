@@ -208,6 +208,8 @@ cat <- function(l1, l2) {
   }
 }
 
+
+
 lazy_queue <- function(front, back, front_length, back_length) {
   structure(list(front = front, back = back,
                  front_length = front_length, back_length = back_length),
@@ -218,8 +220,8 @@ rot <- function(front, back, a) {
   if (is_nil(front)) cons(car(back), a)
   else {
     lazy_thunk <- function(lst) function() lst()
-    lazy_thunk(cons(car(front),
-                    rot(cdr(front), cdr(back), cons(car(back), a))))
+    tail <- cons(car(back), a)
+    cons(car(front), lazy_thunk(rot(cdr(front), cdr(back), tail)))
   }
 }
 
