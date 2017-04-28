@@ -12,4 +12,3 @@ an empty queue
 \description{
 Construct an empty closure based queue
 }
-

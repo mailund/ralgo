@@ -2,17 +2,25 @@
 % Please edit documentation in R/basics.R
 \name{list_tail}
 \alias{list_tail}
+\alias{list_tail}
 \title{Get the tail of a linked list.}
 \usage{
+list_tail(lst)
+
 list_tail(lst)
 }
 \arguments{
 \item{lst}{The list}
+
+\item{lst}{The list}
 }
 \value{
+The tail of the list
+
 The tail of the list
 }
 \description{
 Get the tail of a linked list.
-}
 
+Get the tail of a linked list.
+}

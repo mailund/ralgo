@@ -2,17 +2,16 @@
 % Please edit documentation in R/basics.R
 \name{list_length}
 \alias{list_length}
-\title{Compute the length of a list.}
+\title{Compute the length of a linked list}
 \usage{
 list_length(lst)
 }
 \arguments{
-\item{lst}{The lsit}
+\item{lst}{The list}
 }
 \value{
-The number of elements in the list.
+the length of the list
 }
 \description{
-This is a linear time algorithm.
+Compute the length of a linked list
 }
-

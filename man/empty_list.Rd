@@ -2,14 +2,20 @@
 % Please edit documentation in R/basics.R
 \name{empty_list}
 \alias{empty_list}
+\alias{empty_list}
 \title{Create an empty linked list.}
 \usage{
+empty_list()
+
 empty_list()
 }
 \value{
 an empty linked list.
+
+an empty linked list.
 }
 \description{
 Create an empty linked list.
-}
 
+Create an empty linked list.
+}

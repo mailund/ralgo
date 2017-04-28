@@ -2,8 +2,11 @@
 % Please edit documentation in R/basics.R
 \name{as.vector.linked_list}
 \alias{as.vector.linked_list}
+\alias{as.vector.linked_list}
 \title{Translate a linked list into an R vector.}
 \usage{
+\method{as.vector}{linked_list}(x, mode = "any")
+
 \method{as.vector}{linked_list}(x, mode = "any")
 }
 \arguments{
@@ -11,11 +14,19 @@
 
 \item{mode}{The mode (numeric, logical, etc.) for the constructed vector.
 The default will be a list}
+
+\item{x}{The linked list}
+
+\item{mode}{The mode (numeric, logical, etc.) for the constructed vector.
+The default will be a list}
 }
 \value{
+An R vector with the elements found in the linked list.
+
 An R vector with the elements found in the linked list.
 }
 \description{
 Translate a linked list into an R vector.
-}
 
+Translate a linked list into an R vector.
+}

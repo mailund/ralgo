@@ -2,19 +2,29 @@
 % Please edit documentation in R/basics.R
 \name{list_cons}
 \alias{list_cons}
+\alias{list_cons}
 \title{Add a head item to a linked list.}
 \usage{
+list_cons(elem, lst)
+
 list_cons(elem, lst)
 }
 \arguments{
 \item{elem}{The item to put at the head of the list.}
 
 \item{lst}{The list -- it will become the tail of the new list.}
+
+\item{elem}{The item to put at the head of the list.}
+
+\item{lst}{The list -- it will become the tail of the new list.}
 }
 \value{
+a new linked list.
+
 a new linked list.
 }
 \description{
 Add a head item to a linked list.
-}
 
+Add a head item to a linked list.
+}
