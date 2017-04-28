@@ -2,29 +2,18 @@
 % Please edit documentation in R/basics.R
 \name{list_get_n_reversed}
 \alias{list_get_n_reversed}
-\alias{list_get_n_reversed}
 \title{Get a new list containing the first n elements of a list reversed.}
 \usage{
-list_get_n_reversed(lst, n)
-
 list_get_n_reversed(lst, n)
 }
 \arguments{
 \item{lst}{A list}
 
 \item{n}{the number of elements to get}
-
-\item{lst}{A list}
-
-\item{n}{the number of elements to get}
 }
 \value{
 a new list containing the first n elements of lst.
-
-a new list containing the first n elements of lst.
 }
 \description{
-Get a new list containing the first n elements of a list reversed.
-
 Get a new list containing the first n elements of a list reversed.
 }

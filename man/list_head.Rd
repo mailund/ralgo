@@ -2,25 +2,16 @@
 % Please edit documentation in R/basics.R
 \name{list_head}
 \alias{list_head}
-\alias{list_head}
 \title{Get the item at the head of a linked list.}
 \usage{
-list_head(lst)
-
 list_head(lst)
 }
 \arguments{
 \item{lst}{The list}
-
-\item{lst}{The list}
 }
 \value{
 The element at the head of the list.
-
-The element at the head of the list.
 }
 \description{
-Get the item at the head of a linked list.
-
 Get the item at the head of a linked list.
 }

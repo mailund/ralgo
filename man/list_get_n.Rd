@@ -2,29 +2,18 @@
 % Please edit documentation in R/basics.R
 \name{list_get_n}
 \alias{list_get_n}
-\alias{list_get_n}
 \title{Get a new list containing the first n elements of a list.}
 \usage{
-list_get_n(lst, n)
-
 list_get_n(lst, n)
 }
 \arguments{
 \item{lst}{A list}
 
 \item{n}{the number of elements to get}
-
-\item{lst}{A list}
-
-\item{n}{the number of elements to get}
 }
 \value{
 a new list containing the first n elements of lst.
-
-a new list containing the first n elements of lst.
 }
 \description{
-Get a new list containing the first n elements of a list.
-
 Get a new list containing the first n elements of a list.
 }

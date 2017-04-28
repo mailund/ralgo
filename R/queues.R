@@ -241,8 +241,8 @@ is_empty.lazy_queue <- function(x) is_nil(x$front) && is_nil(x$back)
 
 #' @method enqueue lazy_queue
 #' @export
-enqueue.lazy_queue <- function(x, e)
-  make_q(x$front, cons(e, x$back),
+enqueue.lazy_queue <- function(x, elm)
+  make_q(x$front, cons(elm, x$back),
          x$front_length, x$back_length + 1)
 
 #' @method front lazy_queue
