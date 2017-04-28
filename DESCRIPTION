@@ -6,8 +6,8 @@ Authors@R: c(person("Thomas", "Mailund", email = "mailund@birc.au.dk", role = c(
 Description: This package implements generic algorithms and data structures
     useful for algorithmic programming in R. The implementation of these is not the
     most efficient possible in R, since I have aimed at implementing them all in
-    pure R and not exploit C or Rcpp, but they are better than relying only on the
-    built in data structures for some operations.
+    pure R and not exploit C or Rcpp, but they usually have better asymptotic performance
+    than built in data strauctures.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

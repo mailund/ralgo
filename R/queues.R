@@ -181,3 +181,76 @@ dequeue.extended_queue <- function(x) {
     x <- queue_extended(x$x, list_reverse(x$back), empty_list())
   queue_extended(NA, list_tail(x$front), x$back)
 }
+
+
+## Lazy queues ###############################################
+
+
+nil <- function() NULL
+cons <- function(car, cdr) {
+  force(car)
+  force(cdr)
+  function() list(car = car, cdr = cdr)
+}
+
+is_nil <- function(lst) is.null(lst())
+car <- function(lst) lst()$car
+cdr <- function(lst) lst()$cdr
+
+
+cat <- function(l1, l2) {
+  force(l1)
+  force(l2)
+  if (is_nil(l1)) l2
+  else {
+    lazy_thunk <- function(lst) function() lst()
+    lazy_thunk(cons(car(l1), cat(cdr(l1), l2)))
+  }
+}
+
+lazy_queue <- function(front, back, front_length, back_length) {
+  structure(list(front = front, back = back,
+                 front_length = front_length, back_length = back_length),
+            class = "lazy_queue")
+}
+
+rot <- function(front, back, a) {
+  if (is_nil(front)) cons(car(back), a)
+  else {
+    lazy_thunk <- function(lst) function() lst()
+    lazy_thunk(cons(car(front),
+                    rot(cdr(front), cdr(back), cons(car(back), a))))
+  }
+}
+
+make_q <- function(front, back, front_length, back_length) {
+  if (back_length <= front_length)
+    lazy_queue(front, back, front_length, back_length)
+  else
+    lazy_queue(rot(front, back, nil), nil,
+               front_length + back_length, 0)
+}
+
+#' Creates an empty lazy queue
+#' @export
+empty_lazy_queue <- function() lazy_queue(nil, nil, 0, 0)
+
+#' @method is_empty lazy_queue
+#' @export
+is_empty.lazy_queue <- function(x) is_nil(x$front) && is_nil(x$back)
+
+#' @method enqueue lazy_queue
+#' @export
+enqueue.lazy_queue <- function(x, e)
+  make_q(x$front, cons(e, x$back),
+         x$front_length, x$back_length + 1)
+
+#' @method front lazy_queue
+#' @export
+front.lazy_queue <- function(x) car(x$front)
+
+#' @method dequeue lazy_queue
+#' @export
+dequeue.lazy_queue <- function(x)
+  make_q(cdr(x$front), x$back,
+         x$front_length - 1, x$back_length)
