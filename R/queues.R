@@ -208,11 +208,8 @@ cat <- function(l1, l2) {
   }
 }
 
-
-
-lazy_queue <- function(front, back, front_length, back_length) {
-  structure(list(front = front, back = back,
-                 front_length = front_length, back_length = back_length),
+lazy_queue <- function(front, back, helper) {
+  structure(list(front = front, back = back, helper = helper),
             class = "lazy_queue")
 }
 
@@ -225,17 +222,19 @@ rot <- function(front, back, a) {
   }
 }
 
-make_q <- function(front, back, front_length, back_length) {
-  if (back_length <= front_length)
-    lazy_queue(front, back, front_length, back_length)
-  else
-    lazy_queue(rot(front, back, nil), nil,
-               front_length + back_length, 0)
+
+make_q <- function(front, back, helper) {
+  if (is_nil(helper)) {
+    helper <- rot(front, back, nil)
+    lazy_queue(helper, nil, helper)
+  } else {
+    lazy_queue(front, back, cdr(helper))
+  }
 }
 
 #' Creates an empty lazy queue
 #' @export
-empty_lazy_queue <- function() lazy_queue(nil, nil, 0, 0)
+empty_lazy_queue <- function() lazy_queue(nil, nil, nil)
 
 #' @method is_empty lazy_queue
 #' @export
@@ -244,8 +243,7 @@ is_empty.lazy_queue <- function(x) is_nil(x$front) && is_nil(x$back)
 #' @method enqueue lazy_queue
 #' @export
 enqueue.lazy_queue <- function(x, elm)
-  make_q(x$front, cons(elm, x$back),
-         x$front_length, x$back_length + 1)
+  make_q(x$front, cons(elm, x$back), x$helper)
 
 #' @method front lazy_queue
 #' @export
@@ -254,5 +252,4 @@ front.lazy_queue <- function(x) car(x$front)
 #' @method dequeue lazy_queue
 #' @export
 dequeue.lazy_queue <- function(x)
-  make_q(cdr(x$front), x$back,
-         x$front_length - 1, x$back_length)
+  make_q(cdr(x$front), x$back, x$helper)
