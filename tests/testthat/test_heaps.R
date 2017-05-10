@@ -33,3 +33,7 @@ test_heap <- function(empty) {
 test_that("We can construct and access a leftist heap", {
   test_heap(empty_leftist_heap())
 })
+
+test_that("We can construct and access a binomial heap", {
+  test_heap(empty_binomial_heap())
+})
