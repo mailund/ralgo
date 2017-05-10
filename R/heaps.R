@@ -13,6 +13,7 @@ find_minimal <- function(heap) UseMethod("find_minimal")
 delete_minimal <- function(heap) UseMethod("delete_minimal")
 
 
+
 ## Leftist heap ##############################
 
 # helper function for creating nodes

@@ -1,7 +1,7 @@
 context("Heaps")
 
-test_that("We can construct and access a leftist heap", {
-  heap <- empty_leftist_heap()
+test_heap <- function(empty) {
+  heap <- empty
   expect_true(is_empty(heap))
 
   heap <- insert(heap, 3)
@@ -28,4 +28,8 @@ test_that("We can construct and access a leftist heap", {
 
   heap <- delete_minimal(heap)
   expect_true(is_empty(heap))
+}
+
+test_that("We can construct and access a leftist heap", {
+  test_heap(empty_leftist_heap())
 })
