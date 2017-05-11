@@ -30,10 +30,28 @@ test_heap <- function(empty) {
   expect_true(is_empty(heap))
 }
 
+test_mixing_operations <- function(empty) {
+  heap <- empty
+  for (i in 1:10) heap <- insert(heap, i)
+  for (i in 1:5) heap <- delete_minimal(heap)
+  for (i in 11:15) heap <- insert(heap, i)
+
+  v <- vector("numeric", length = 10)
+  for (i in 1:10) {
+    v[i] <- find_minimal(heap)
+    heap <- delete_minimal(heap)
+  }
+
+  expect_true(is_empty(heap))
+  expect_equal(v, 6:15)
+}
+
 test_that("We can construct and access a leftist heap", {
   test_heap(empty_leftist_heap())
+  test_mixing_operations(empty_leftist_heap())
 })
 
 test_that("We can construct and access a binomial heap", {
   test_heap(empty_binomial_heap())
+  test_mixing_operations(empty_binomial_heap())
 })
