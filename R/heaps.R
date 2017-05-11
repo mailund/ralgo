@@ -124,41 +124,17 @@ is_empty.binomial_heap <- function(x) is_empty(x$heap_nodes)
 #' @method find_minimal binomial_heap
 #' @export
 find_minimal.binomial_heap <- function(heap) {
-  if (is_empty(heap)) stop("Can't get the minimal value in an empty heap")
   heap$min_value
 }
 
-# The trees in a binomial heaps are ordered by rank and should be thought of as
-# one bits in a binary number. When we insert an element it sets the first bit to zero
-# but if that bit is already set we must carry it so we create a new tree from the
-# new tree and the former lowest rank tree and then carry that in a recursive call
-insert_binomial_node <- function(new_node, heap_nodes) {
-  if (is_empty(heap_nodes)) {
-    return(list_cons(new_node, empty_list()))
-  }
-
-  first_node <- list_head(heap_nodes)
-  if (new_node$rank < first_node$rank) {
-    list_cons(new_node, heap_nodes)
-  } else {
-    new_tree <- link_binomial_trees(new_node$tree, first_node$tree)
-    new_node <- binomial_heap_node(new_node$rank + 1, new_tree)
-    insert_binomial_node(new_node, list_tail(heap_nodes))
-  }
-}
 
 #' @method insert binomial_heap
 #' @export
 insert.binomial_heap <- function(x, elm, ...) {
-  if (is_empty(x)) {
-    nodes <- list_cons(singleton_binomial_heap_node(elm), empty_list())
-    binomial_heap(elm, nodes)
-  } else {
-    new_min_value <- min(find_minimal(x), elm)
-    new_node <- singleton_binomial_heap_node(elm)
-    new_nodes <- insert_binomial_node(new_node, x$heap_nodes)
-    binomial_heap(new_min_value, new_nodes)
-  }
+  new_min_value <- min(x$min_value, elm, na.rm = TRUE)
+  new_node <- singleton_binomial_heap_node(elm)
+  new_nodes <- insert_binomial_node(new_node, x$heap_nodes)
+  binomial_heap(new_min_value, new_nodes)
 }
 
 # merging two lists of heap nodes work like binary addition...
@@ -175,8 +151,13 @@ merge_heap_nodes <- function(x, y) {
   } else {
     new_tree <- link_binomial_trees(first_x$tree, first_y$tree)
     new_node <- binomial_heap_node(first_x$rank + 1, new_tree)
-    merge_heap_nodes(new_node, merge_heap_nodes(list_tail(x), list_tail(y)))
+    rest <- merge_heap_nodes(list_tail(x), list_tail(y))
+    insert_binomial_node(new_node, rest)
   }
+}
+
+insert_binomial_node <- function(new_node, heap_nodes) {
+  return(merge_heap_nodes(list_cons(new_node, empty_list()), heap_nodes))
 }
 
 #' @method merge binomial_heap
@@ -184,7 +165,7 @@ merge_heap_nodes <- function(x, y) {
 merge.binomial_heap <- function(x, y, ...) {
   if (is_empty(x)) return(y)
   if (is_empty(y)) return(x)
-  new_min_value <- min(find_minimal(x), find_minimal(y))
+  new_min_value <- min(x$min_value, y$min_value)
   new_nodes <- merge_heap_nodes(x$heap_nodes, y$heap_nodes)
   binomial_heap(new_min_value, new_nodes)
 }
@@ -199,8 +180,12 @@ get_minimal_node <- function(min_value, heap_nodes) {
 delete_minimal_node <- function(min_value, heap_nodes) {
   # we should never reach an empty list since the min_value must be in there...
   first_node <- list_head(heap_nodes)
-  if (first_node$tree$value == min_value) list_tail(heap_nodes)
-  else list_cons(first_node, delete_minimal_node(min_value, list_tail(heap_nodes)))
+  if (first_node$tree$value == min_value) {
+    list_tail(heap_nodes)
+  } else {
+    rest <- delete_minimal_node(min_value, list_tail(heap_nodes))
+    list_cons(first_node, rest)
+  }
 }
 
 binomial_trees_to_nodes <- function(rank, trees) {
@@ -208,16 +193,17 @@ binomial_trees_to_nodes <- function(rank, trees) {
     empty_list()
   } else {
     list_cons(binomial_heap_node(rank, list_head(trees)),
-              binomial_trees_to_nodes(rank, list_tail(trees)))
+              binomial_trees_to_nodes(rank - 1, list_tail(trees)))
   }
 }
 
-binomial_nodes_min_value <- function(heap_nodes, current_min = Inf) {
+binomial_nodes_min_value <- function(heap_nodes, cur_min = NA) {
   if (is_empty(heap_nodes)) {
-    current_min
+    cur_min
   } else {
-    new_current_min <- min(current_min, list_head(heap_nodes)$tree$value)
-    binomial_nodes_min_value(list_tail(heap_nodes), new_current_min)
+    front_value <- list_head(heap_nodes)$tree$value
+    new_cur_min <- min(cur_min, front_value, na.rm = TRUE)
+    binomial_nodes_min_value(list_tail(heap_nodes), new_cur_min)
   }
 }
 
@@ -226,11 +212,15 @@ binomial_nodes_min_value <- function(heap_nodes, current_min = Inf) {
 delete_minimal.binomial_heap <- function(heap) {
   if (is_empty(heap)) stop("Can't delete the minimal value in an empty heap")
 
-  min_node <- get_minimal_node(heap$min_value, heap$heap_nodes)
-  other_nodes <- delete_minimal_node(heap$min_value, heap$heap_nodes)
-  min_node_nodes <- binomial_trees_to_nodes(min_node$rank - 1,
-                                            list_reverse(min_node$tree$trees))
-  new_nodes <- merge_heap_nodes(other_nodes, min_node_nodes)
+  min_node <-
+    get_minimal_node(heap$min_value, heap$heap_nodes)
+  other_nodes <-
+    delete_minimal_node(heap$min_value, heap$heap_nodes)
+  min_node_nodes <-
+    binomial_trees_to_nodes(min_node$rank - 1,
+                            min_node$tree$trees)
+  new_nodes <-
+    merge_heap_nodes(other_nodes, list_reverse(min_node_nodes))
   new_min_value <- binomial_nodes_min_value(new_nodes)
   binomial_heap(new_min_value, new_nodes)
 }
