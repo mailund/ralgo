@@ -213,11 +213,10 @@ binomial_trees_to_nodes <- function(rank, trees) {
 }
 
 binomial_nodes_min_value <- function(heap_nodes, current_min = NA) {
-  my_min <- function(x, y) ifelse(is.na(x), y, min(x, y))
   if (is_empty(heap_nodes)) {
     current_min
   } else {
-    new_current_min <- my_min(current_min, list_head(heap_nodes)$tree$value)
+    new_current_min <- min(current_min, list_head(heap_nodes)$tree$value, na.rm = TRUE)
     binomial_nodes_min_value(list_tail(heap_nodes), new_current_min)
   }
 }
