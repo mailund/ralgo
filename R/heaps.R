@@ -23,7 +23,7 @@ leftist_heap_node <- function(
   , right = empty_leftist_heap()
   , rank = 0
   ) {
-  structure(list(left = left, value = value, right = right, rank = 0),
+  structure(list(left = left, value = value, right = right, rank = rank),
             class = c("leftist_heap", "heap"))
 }
 
