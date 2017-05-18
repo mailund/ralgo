@@ -19,6 +19,13 @@ test_queue <- function(empty) {
     q <- dequeue(q)
   }
   expect_equal(v, 1:3)
+  expect_true(is_empty(q))
+
+  for (x in 1:3)
+    q <- enqueue(q, x)
+  for (x in 1:3)
+    q <- dequeue(q)
+  expect_true(is_empty(q))
 }
 
 test_that("We can construct and empty an environment-based queue", {

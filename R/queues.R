@@ -197,17 +197,6 @@ is_nil <- function(lst) is.null(lst())
 car <- function(lst) lst()$car
 cdr <- function(lst) lst()$cdr
 
-
-cat <- function(l1, l2) {
-  force(l1)
-  force(l2)
-  if (is_nil(l1)) l2
-  else {
-    lazy_thunk <- function(lst) function() lst()
-    lazy_thunk(cons(car(l1), cat(cdr(l1), l2)))
-  }
-}
-
 lazy_queue <- function(front, back, helper) {
   structure(list(front = front, back = back, helper = helper),
             class = "lazy_queue")
