@@ -12,3 +12,4 @@ New, empty, red-black search tree
 \description{
 Create empty red-black search tree
 }
+

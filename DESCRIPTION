@@ -4,13 +4,13 @@ Title: Algorithms and data structures for R programming
 Version: 0.0.0.9000
 Authors@R: c(person("Thomas", "Mailund", email = "mailund@birc.au.dk", role = c("cre", "aut")))
 Description: This package implements generic algorithms and data structures
-    useful for algorithmic programming in R. The implementation of these is not the
-    most efficient possible in R, since I have aimed at implementing them all in
-    pure R and not exploit C or Rcpp, but they usually have better asymptotic performance
-    than built in data strauctures.
+    useful for algorithmic programming in R. The implementation of these is not
+    the most efficient possible in R, since I have aimed at implementing them all
+    in pure R and not exploit C or Rcpp, but they usually have better asymptotic
+    performance than built in data strauctures.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.0
+RoxygenNote: 5.0.1
 Suggests:
     testthat
