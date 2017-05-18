@@ -12,7 +12,32 @@ find_minimal <- function(heap) UseMethod("find_minimal")
 #' @export
 delete_minimal <- function(heap) UseMethod("delete_minimal")
 
+## Functions working on heaps ################
 
+singleton_heap <- function(empty_heap, e) insert(empty_heap, e)
+
+#' Construct a heap from a vector of elements.
+#'
+#' This function builds heaps in linear time by iteratively merging larger and larger heaps.
+#'
+#' @param vec The vector to translate into a heap.
+#' @param empty_heap Empty heap for determing which heap implementation to use.
+#' @param empty_queue Empty queue to determing which queue implementation to use for
+#'                    building the heap.
+#' @export
+vector_to_heap <- function(vec, empty_heap, empty_queue = empty_env_queue()) {
+  q <- empty_queue
+  for (e in vec)
+    q <- enqueue(q, singleton_heap(empty_heap, e))
+  repeat {
+    first <- front(q) ; q <- dequeue(q)
+    if (is_empty(q)) break
+    second <- front(q) ; q <- dequeue(q)
+    new_heap <- merge(first, second)
+    q <- enqueue(q, new_heap)
+  }
+  first
+}
 
 ## Leftist heap ##############################
 
