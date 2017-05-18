@@ -28,6 +28,17 @@ test_heap <- function(empty) {
 
   heap <- delete_minimal(heap)
   expect_true(is_empty(heap))
+
+
+  for (x in sample(1:100))
+    heap <- insert(heap, x)
+  v <- vector("numeric", length = 100)
+  for (i in 1:100) {
+    v[i] <- find_minimal(heap)
+    heap <- delete_minimal(heap)
+  }
+  expect_true(is_empty(heap))
+  expect_equal(v, 1:100)
 }
 
 test_mixing_operations <- function(empty) {
@@ -47,17 +58,19 @@ test_mixing_operations <- function(empty) {
 }
 
 test_merging <- function(empty) {
-  h1 <- vector_to_heap(1:3, empty)
-  h2 <- vector_to_heap(4:6, empty)
-  heap <- merge(h1, h2)
+  h1 <- vector_to_heap(1:6, empty)
+  h2 <- vector_to_heap(rev(7:12), empty)
+  h3 <- vector_to_heap(sample(13:18), empty)
+  heap <- merge(merge(h1, h2), h3)
 
-  v <- vector("numeric", length = 6)
-  for (i in 1:6) {
+  v <- vector("numeric", length = 18)
+  for (i in 1:18) {
     v[i] <- find_minimal(heap)
     heap <- delete_minimal(heap)
   }
   expect_true(is_empty(heap))
-  expect_equal(v, 1:6)
+  expect_equal(v, 1:18)
+
 }
 
 
@@ -71,4 +84,10 @@ test_that("We can construct and access a binomial heap", {
   test_heap(empty_binomial_heap())
   test_mixing_operations(empty_binomial_heap())
   test_merging(empty_binomial_heap())
+})
+
+test_that("We can construct and access a splay heap", {
+  test_heap(empty_splay_heap())
+  test_mixing_operations(empty_splay_heap())
+  test_merging(empty_splay_heap())
 })

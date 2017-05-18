@@ -250,3 +250,163 @@ delete_minimal.binomial_heap <- function(heap) {
   binomial_heap(new_min_value, new_nodes)
 }
 
+
+
+## Splay heap ##############################
+
+# helper function for creating nodes
+splay_tree_node <- function(value, left = NULL, right = NULL) {
+  list(left = left, value = value, right = right)
+}
+
+splay_heap <- function(min_value, splay_tree) {
+  structure(list(min_value = min_value, tree = splay_tree),
+            class = c("splay_heap", "heap"))
+}
+
+#' Construct an empty splay heap
+#' @return an empty splay heap
+#' @export
+empty_splay_heap <- function() splay_heap(NA, NULL)
+
+#' Test whether a splay heap is empty
+#' @param x splay heap
+#' @return Whether the heap is empty
+#' @method is_empty splay_heap
+#' @export
+is_empty.splay_heap <- function(x) is.null(x$tree)
+
+#' @method find_minimal splay_heap
+#' @export
+find_minimal.splay_heap <- function(heap) {
+  heap$min_value
+}
+
+splay_find_minimal_value <- function(tree) {
+  if (is.null(tree)) NA
+  else if (is.null(tree$left)) tree$value
+  else splay_find_minimal_value(tree$left)
+}
+
+splay_delete_minimal_value <- function(tree) {
+  if (is.null(tree$left)) {
+    tree$right
+
+  } else {
+    a <- tree$left$left
+    x <- tree$left$value
+    b <- tree$left$right
+    y <- tree$value
+    c <- tree$right
+
+    if (is.null(a))
+      splay_tree_node(left = b, value = y, right = c)
+    else
+      splay_tree_node(left = splay_delete_minimal_value(a),
+                      value = x,
+                      right = splay_tree_node(left = b, value = y, right = c))
+  }
+}
+
+#' @method delete_minimal splay_heap
+#' @export
+delete_minimal.splay_heap <- function(heap) {
+  if (is_empty(heap)) stop("Can't delete the minimal value in an empty heap")
+  new_tree <- splay_delete_minimal_value(heap$tree)
+  new_min_value <- splay_find_minimal_value(new_tree)
+  splay_heap(min_value = new_min_value, splay_tree = new_tree)
+}
+
+partition <- function(pivot, tree) {
+  if (is.null(tree)) {
+    smaller <- NULL
+    larger <- NULL
+
+  } else {
+    a <- tree$left
+    x <- tree$value
+    b <- tree$right
+    if (x <= pivot) {
+      if (is.null(b)) {
+        smaller <- tree
+        larger <- NULL
+      } else {
+        b1 <- b$left
+        y <- b$value
+        b2 <- b$right
+        if (y <= pivot) {
+          part <- partition(pivot, b2)
+          smaller <- splay_tree_node(left = splay_tree_node(left = a,
+                                                            value = x,
+                                                            right = b1),
+                                      value = y,
+                                      right = part$smaller)
+          larger <- part$larger
+        } else {
+          part <- partition(pivot, b1)
+          smaller <- splay_tree_node(left = a,
+                                     value = x,
+                                     right = part$smaller)
+          larger <- splay_tree_node(left = part$larger,
+                                    value = y,
+                                    right = b2)
+        }
+      }
+    } else {
+      if (is.null(a)) {
+        smaller <- NULL
+        larger <- tree
+      } else {
+        a1 <- a$left
+        y <- a$value
+        a2 <- a$right
+        if (y <= pivot) {
+          part <- partition(pivot, a2)
+          smaller <- splay_tree_node(left = a1, value = y, right = part$smaller)
+          larger <- splay_tree_node(left = part$larger, value = x, right = b)
+        } else {
+          part <- partition(pivot, a1)
+          smaller <- part$smaller
+          larger <- splay_tree_node(left = part$larger, value = y,
+                                    right = splay_tree_node(left = a2, value = x, right = b))
+        }
+      }
+    }
+  }
+  list(smaller = smaller, larger = larger)
+}
+
+#' @method insert splay_heap
+#' @export
+insert.splay_heap <- function(x, elm, ...) {
+  part <- partition(elm, x$tree)
+  new_tree <- splay_tree_node(value = elm, left = part$smaller, right = part$larger)
+  new_min_value <- min(x$min_value, elm, na.rm = TRUE)
+  splay_heap(min_value = new_min_value, splay_tree = new_tree)
+}
+
+merge_splay_trees <- function(x, y) {
+  if (is.null(x)) return(y)
+  if (is.null(y)) return(x)
+
+  a <- x$left
+  val <- x$value
+  b <- x$right
+
+  part <- partition(val, y)
+  splay_tree_node(left = merge_splay_trees(part$smaller, a),
+                  value = val,
+                  right = merge_splay_trees(part$larger, b))
+}
+
+#' @method merge splay_heap
+#' @export
+merge.splay_heap <- function(x, y, ...) {
+  if (is_empty(x)) return(y)
+  if (is_empty(y)) return(x)
+
+  new_tree <- merge_splay_trees(x$tree, y$tree)
+  new_min_value <- min(x$min_value, y$min_value, na.rm = TRUE)
+  splay_heap(min_value = new_min_value, splay_tree = new_tree)
+}
+
