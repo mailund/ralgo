@@ -302,11 +302,14 @@ splay_delete_minimal_value <- function(tree) {
     if (is.null(a))
       splay_tree_node(left = b, value = y, right = c)
     else
-      splay_tree_node(left = splay_delete_minimal_value(a),
-                      value = x,
-                      right = splay_tree_node(left = b, value = y, right = c))
+      splay_tree_node(
+        left = splay_delete_minimal_value(a),
+        value = x,
+        right = splay_tree_node(left = b, value = y, right = c)
+      )
   }
 }
+
 
 #' @method delete_minimal splay_heap
 #' @export
@@ -336,20 +339,28 @@ partition <- function(pivot, tree) {
         b2 <- b$right
         if (y <= pivot) {
           part <- partition(pivot, b2)
-          smaller <- splay_tree_node(left = splay_tree_node(left = a,
-                                                            value = x,
-                                                            right = b1),
-                                      value = y,
-                                      right = part$smaller)
+          smaller <- splay_tree_node(
+            left = splay_tree_node(
+              left = a,
+              value = x,
+              right = b1
+            ),
+            value = y,
+            right = part$smaller
+          )
           larger <- part$larger
         } else {
           part <- partition(pivot, b1)
-          smaller <- splay_tree_node(left = a,
-                                     value = x,
-                                     right = part$smaller)
-          larger <- splay_tree_node(left = part$larger,
-                                    value = y,
-                                    right = b2)
+          smaller <- splay_tree_node(
+            left = a,
+            value = x,
+            right = part$smaller
+          )
+          larger <- splay_tree_node(
+            left = part$larger,
+            value = y,
+            right = b2
+          )
         }
       }
     } else {
@@ -362,13 +373,28 @@ partition <- function(pivot, tree) {
         a2 <- a$right
         if (y <= pivot) {
           part <- partition(pivot, a2)
-          smaller <- splay_tree_node(left = a1, value = y, right = part$smaller)
-          larger <- splay_tree_node(left = part$larger, value = x, right = b)
+          smaller <- splay_tree_node(
+            left = a1,
+            value = y,
+            right = part$smaller
+          )
+          larger <- splay_tree_node(
+            left = part$larger,
+            value = x,
+            right = b
+          )
         } else {
           part <- partition(pivot, a1)
           smaller <- part$smaller
-          larger <- splay_tree_node(left = part$larger, value = y,
-                                    right = splay_tree_node(left = a2, value = x, right = b))
+          larger <- splay_tree_node(
+            left = part$larger,
+            value = y,
+            right = splay_tree_node(
+              left = a2,
+              value = x,
+              right = b
+            )
+          )
         }
       }
     }
