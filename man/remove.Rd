@@ -19,4 +19,3 @@ x with elm removed
 \description{
 Remove an element from a data structure
 }
-

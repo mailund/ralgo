@@ -17,4 +17,3 @@ An R list with the elements found in the linked list.
 \description{
 Translate a tree bag into an R list.
 }
-

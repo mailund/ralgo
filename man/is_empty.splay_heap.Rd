@@ -15,4 +15,3 @@ Whether the heap is empty
 \description{
 Test whether a splay heap is empty
 }
-

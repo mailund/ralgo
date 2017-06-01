@@ -12,4 +12,3 @@ an empty deque
 \description{
 Construct an empty deque
 }
-

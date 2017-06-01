@@ -9,4 +9,3 @@ empty_lazy_queue()
 \description{
 Creates an empty lazy queue
 }
-

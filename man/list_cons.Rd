@@ -17,4 +17,3 @@ a new linked list.
 \description{
 Add a head item to a linked list.
 }
-

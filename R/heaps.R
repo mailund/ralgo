@@ -320,87 +320,184 @@ delete_minimal.splay_heap <- function(heap) {
   splay_heap(min_value = new_min_value, splay_tree = new_tree)
 }
 
-partition <- function(pivot, tree) {
-  if (is.null(tree)) {
-    smaller <- NULL
-    larger <- NULL
+is_case_1 <- function(pivot, tree) {
+  a <- tree$left
+  x <- tree$value
+  b <- tree$right
+  x <= pivot && is.null(b)
+}
 
-  } else {
-    a <- tree$left
-    x <- tree$value
-    b <- tree$right
-    if (x <= pivot) {
-      if (is.null(b)) {
-        smaller <- tree
-        larger <- NULL
-      } else {
-        b1 <- b$left
-        y <- b$value
-        b2 <- b$right
-        if (y <= pivot) {
-          part <- partition(pivot, b2)
-          smaller <- splay_tree_node(
-            left = splay_tree_node(
-              left = a,
-              value = x,
-              right = b1
-            ),
-            value = y,
-            right = part$smaller
-          )
-          larger <- part$larger
-        } else {
-          part <- partition(pivot, b1)
-          smaller <- splay_tree_node(
-            left = a,
-            value = x,
-            right = part$smaller
-          )
-          larger <- splay_tree_node(
-            left = part$larger,
-            value = y,
-            right = b2
-          )
-        }
-      }
-    } else {
-      if (is.null(a)) {
-        smaller <- NULL
-        larger <- tree
-      } else {
-        a1 <- a$left
-        y <- a$value
-        a2 <- a$right
-        if (y <= pivot) {
-          part <- partition(pivot, a2)
-          smaller <- splay_tree_node(
-            left = a1,
-            value = y,
-            right = part$smaller
-          )
-          larger <- splay_tree_node(
-            left = part$larger,
-            value = x,
-            right = b
-          )
-        } else {
-          part <- partition(pivot, a1)
-          smaller <- part$smaller
-          larger <- splay_tree_node(
-            left = part$larger,
-            value = y,
-            right = splay_tree_node(
-              left = a2,
-              value = x,
-              right = b
-            )
-          )
-        }
-      }
-    }
-  }
+transform_case_1 <- function(pivot, tree) {
+  a <- tree$left
+  x <- tree$value
+  b <- tree$right
+  list(smaller = tree, larger = NULL)
+}
+
+is_case_2 <- function(pivot, tree) {
+  # is only called when right is not empty...
+  a <- tree$left
+  x <- tree$value
+  b1 <- tree$right$left
+  y <- tree$right$value
+  b2 <- tree$right$right
+  x <= pivot && y <= pivot
+}
+
+transform_case_2 <- function(pivot, tree) {
+  # is only called when right is not empty...
+  a <- tree$left
+  x <- tree$value
+  b1 <- tree$right$left
+  y <- tree$right$value
+  b2 <- tree$right$right
+
+  part <- partition(pivot, b2)
+  smaller <- splay_tree_node(
+    left = splay_tree_node(
+      left = a,
+      value = x,
+      right = b1
+    ),
+    value = y,
+    right = part$smaller
+  )
+  larger <- part$larger
+
   list(smaller = smaller, larger = larger)
 }
+
+is_case_3 <- function(pivot, tree) {
+  # is only called when right is not empty...
+  a <- tree$left
+  x <- tree$value
+  b1 <- tree$right$left
+  y <- tree$right$value
+  b2 <- tree$right$right
+  x <= pivot && y > pivot
+}
+
+transform_case_3 <- function(pivot, tree) {
+  # is only called when right is not empty...
+  a <- tree$left
+  x <- tree$value
+  b1 <- tree$right$left
+  y <- tree$right$value
+  b2 <- tree$right$right
+
+  part <- partition(pivot, b1)
+  smaller <- splay_tree_node(
+    left = a,
+    value = x,
+    right = part$smaller
+  )
+  larger <- splay_tree_node(
+    left = part$larger,
+    value = y,
+    right = b2
+  )
+
+  list(smaller = smaller, larger = larger)
+}
+
+is_case_4 <- function(pivot, tree) {
+  a <- tree$left
+  x <- tree$value
+  b <- tree$right
+  x > pivot && is.null(a)
+}
+
+transform_case_4 <- function(pivot, tree) {
+  a <- tree$left
+  x <- tree$value
+  b <- tree$right
+  list(smaller = NULL, larger = tree)
+}
+
+is_case_5 <- function(pivot, tree) {
+  # is only called when left is not empty
+  a1 <- tree$left$left
+  y <- tree$left$value
+  a2 <- tree$left$right
+  x <- tree$value
+  b <- tree$right
+  x > pivot && y <= pivot
+}
+
+transform_case_5 <- function(pivot, tree) {
+  # is only called when left is not empty
+  a1 <- tree$left$left
+  y <- tree$left$value
+  a2 <- tree$left$right
+  x <- tree$value
+  b <- tree$right
+
+  part <- partition(pivot, a2)
+  smaller <- splay_tree_node(
+    left = a1,
+    value = y,
+    right = part$smaller
+  )
+  larger <- splay_tree_node(
+    left = part$larger,
+    value = x,
+    right = b
+  )
+
+  list(smaller = smaller, larger = larger)
+}
+
+is_case_6 <- function(pivot, tree) {
+  # is only called when left is not empty
+  a1 <- tree$left$left
+  y <- tree$left$value
+  a2 <- tree$left$right
+  x <- tree$value
+  b <- tree$right
+  x > pivot && y > pivot
+}
+
+transform_case_6 <- function(pivot, tree) {
+  # is only called when left is not empty
+  a1 <- tree$left$left
+  y <- tree$left$value
+  a2 <- tree$left$right
+  x <- tree$value
+  b <- tree$right
+
+  part <- partition(pivot, a1)
+  smaller <- part$smaller
+  larger <- splay_tree_node(
+    left = part$larger,
+    value = y,
+    right = splay_tree_node(
+      left = a2,
+      value = x,
+      right = b
+    )
+  )
+
+  list(smaller = smaller, larger = larger)
+}
+
+partition <- function(pivot, tree) {
+  if (is.null(tree))
+    list(smaller = NULL, larger = NULL)
+  else if (is_case_1(pivot, tree))
+    transform_case_1(pivot, tree)
+  else if (is_case_2(pivot, tree))
+    transform_case_2(pivot, tree)
+  else if (is_case_3(pivot, tree))
+    transform_case_3(pivot, tree)
+  else if (is_case_4(pivot, tree))
+    transform_case_4(pivot, tree)
+  else if (is_case_5(pivot, tree))
+    transform_case_5(pivot, tree)
+  else if (is_case_6(pivot, tree))
+    transform_case_6(pivot, tree)
+  else stop("Unknown case")
+}
+
 
 #' @method insert splay_heap
 #' @export
