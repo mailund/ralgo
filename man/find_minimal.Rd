@@ -15,3 +15,4 @@ The minimal value in the heap
 \description{
 Get the minimal value in a heap
 }
+

@@ -15,3 +15,4 @@ The heap with the minimal value removed
 \description{
 Delete the minimal value in a heap
 }
+

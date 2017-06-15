@@ -15,3 +15,4 @@ The updated deque
 \description{
 Remove the back element of a deque
 }
+

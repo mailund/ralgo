@@ -15,3 +15,4 @@ the front element of the queue
 \description{
 Get the front element of a queue
 }
+

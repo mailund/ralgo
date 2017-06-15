@@ -15,3 +15,4 @@ the back element of the deque
 \description{
 Get the back element of a deque
 }
+
