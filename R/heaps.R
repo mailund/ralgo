@@ -503,7 +503,11 @@ partition <- function(pivot, tree) {
 #' @export
 insert.splay_heap <- function(x, elm, ...) {
   part <- partition(elm, x$tree)
-  new_tree <- splay_tree_node(value = elm, left = part$smaller, right = part$larger)
+  new_tree <- splay_tree_node(
+    value = elm,
+    left = part$smaller,
+    right = part$larger
+  )
   new_min_value <- min(x$min_value, elm, na.rm = TRUE)
   splay_heap(min_value = new_min_value, splay_tree = new_tree)
 }

@@ -1,11 +1,4 @@
 
-#' Check if a random access list is empty
-#'
-#' @param ral Random access list
-#' @return whether ral is empty
-#' @export
-ral_is_empty <- function(ral) is.null(ral)
-
 ral_binary_tree <- function(value, left, right) {
   list(value = value, left = left, right = right)
 }
@@ -18,6 +11,13 @@ ral_singleton_node <- function(value, siblings = NULL) {
   singleton_tree <- ral_binary_tree(value, NULL, NULL)
   ral_node(singleton_tree, 1, siblings)
 }
+
+#' Check if a random access list is empty
+#'
+#' @param ral Random access list
+#' @return whether ral is empty
+#' @export
+ral_is_empty <- function(ral) is.null(ral)
 
 #' Construct a new random access list by prepending an element.
 #'
