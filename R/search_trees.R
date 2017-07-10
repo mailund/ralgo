@@ -94,9 +94,9 @@ remove.unbalanced_search_tree <- function(x, elm, ...) {
 ## Red-Black search tree ############################
 
 # colours
-RED = 0
-BLACK = 1
-DOUBLE_BLACK = 2
+RED <- 0
+BLACK <- 1
+DOUBLE_BLACK <- 2
 
 # helper function
 red_black_tree_node <- function(
