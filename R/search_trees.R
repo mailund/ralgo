@@ -95,7 +95,8 @@ remove.unbalanced_search_tree <- function(x, elm, ...) {
 
 # colours
 RED = 0
-BLACK = 0
+BLACK = 1
+DOUBLE_BLACK = 2
 
 # helper function
 red_black_tree_node <- function(
@@ -109,7 +110,7 @@ red_black_tree_node <- function(
 }
 
 # special node for empty trees
-empty_red_black_tree_node = red_black_tree_node(RED, NA, NULL, NULL)
+empty_red_black_tree_node <- red_black_tree_node(RED, NA, NULL, NULL)
 
 #' Create empty red-black search tree
 #' @return New, empty, red-black search tree
@@ -182,8 +183,6 @@ member.red_black_tree <- function(x, elm, ...) {
   else member(x$right, elm)
 }
 
-rbt_leftmost <- st_leftmost
-
 rbt_remove <- function(tree, elm) { # FIXME: rebalancing not done correctly yet
   # if we reach an empty tree, there is nothing to do
   if (is_empty(tree)) return(tree)
@@ -194,7 +193,7 @@ rbt_remove <- function(tree, elm) { # FIXME: rebalancing not done correctly yet
     if (is_empty(a)) return(b)
     if (is_empty(b)) return(a)
 
-    s <- rbt_leftmost(tree$right)
+    s <- st_leftmost(tree$right)
     return(rbt_balance(tree$colour, s, a, rbt_remove(b, s)))
   }
 
@@ -209,6 +208,6 @@ rbt_remove <- function(tree, elm) { # FIXME: rebalancing not done correctly yet
 #' @export
 remove.red_black_tree <- function(x, elm, ...) {
   new_tree <- rbt_remove(x, elm)
-  new_tree$colour <- BLACK
+  if (!is_empty(new_tree)) new_tree$colour <- BLACK
   new_tree
 }

@@ -71,11 +71,13 @@ test_that("We can construct and access a red-black search tree", {
     tree <- remove(tree, elm)
     expect_false(member(tree, elm))
   }
+
   for (elm in 1:10)
     expect_false(member(tree, elm))
   expect_true(is_empty(tree))
 
-  for (elm in sample(1:10)) {
+
+    for (elm in sample(1:10)) {
     tree <- insert(tree, elm)
   }
   for (elm in sample(1:10)) {
