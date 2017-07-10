@@ -73,7 +73,7 @@ st_remove <- function(tree, elm) {
     if (is_empty(a)) return(b)
     if (is_empty(b)) return(a)
 
-    s <- st_leftmost(tree)
+    s <- st_leftmost(tree$right)
     return(search_tree_node(s, a, st_remove(b, s)))
   }
 
@@ -188,56 +188,15 @@ rbt_remove <- function(tree, elm) { # FIXME: rebalancing not done correctly yet
   # if we reach an empty tree, there is nothing to do
   if (is_empty(tree)) return(tree)
 
-  # # the element might have zero children
-  # if (pattern_match(a = tree$left, b = tree$right,
-  #                   !is_empty(a), !is_empty(b),
-  #                   a$value == elm,
-  #                   is_empty(a$left), is_empty(a$right))) {
-  #   return(red_black_tree_node(tree$colour, tree$value, empty_red_black_tree(), b))
-  # }
-  # if (pattern_match(a = tree$left, b = tree$right,
-  #                   !is_empty(a), !is_empty(b),
-  #                   b$value == elm,
-  #                   is_empty(b$left), is_empty(b$right))) {
-  #   return(red_black_tree_node(tree$colour, tree$value, a, empty_red_black_tree()))
-  # }
-  #
-  # # the element might have one child
-  # if (pattern_match(a = tree$left$left, b = tree$right,
-  #                   tree$left$value == elm,
-  #                   !is_empty(a), !is_empty(b), is_empty(tree$left$right))
-  #
-  #     || pattern_match(a = tree$left$right, b = tree$right,
-  #                      tree$left$value == elm,
-  #                      !is_empty(a), !is_empty(b), is_empty(tree$left$left))
-  #
-  #     || pattern_match(a = tree$left, b = tree$right$left,
-  #                      tree$right$value == elm,
-  #                      !is_empty(a), !is_empty(b), is_empty(tree$right$right))
-  #
-  #     || pattern_match(a = tree$left, b = tree$right$right,
-  #                      tree$right$value == elm,
-  #                      !is_empty(a), !is_empty(b), is_empty(tree$right$left))) {
-  #   return(red_black_tree_node(tree$colour, tree$value, a, b))
-  # }
-
   if (tree$value == elm) {
     a <- tree$left
     b <- tree$right
     if (is_empty(a)) return(b)
     if (is_empty(b)) return(a)
 
-    s <- rbt_leftmost(tree)
+    s <- rbt_leftmost(tree$right)
     return(rbt_balance(tree$colour, s, a, rbt_remove(b, s)))
   }
-
-  # # element is found at an inner node
-  # if (tree$value == elm) {
-  #   s <- rbt_leftmost(tree)
-  #   a <- tree$left
-  #   b <- tree$right
-  #   return(rbt_balance(tree$colour, s, a, rbt_remove(b, s)))
-  # }
 
   # we need to search further down to remove the element
   if (elm < tree$value)
