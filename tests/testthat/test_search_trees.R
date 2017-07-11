@@ -42,6 +42,16 @@ test_that("We can construct and access a (unbalanced) search tree", {
   }
 })
 
+min_max_depth <- function(tree) {
+  if (is_empty(tree))
+    return(c(0, 0))
+
+  left_min_max <- min_max_depth(tree$left)
+  right_min_max <- min_max_depth(tree$right)
+  min_depth <- min(left_min_max[1], right_min_max[1]) + 1
+  max_depth <- max(left_min_max[2], right_min_max[2]) + 1
+  c(min_depth, max_depth)
+}
 
 test_that("We can construct and access a red-black search tree", {
   tree <- empty_red_black_tree()
@@ -85,5 +95,31 @@ test_that("We can construct and access a red-black search tree", {
     expect_true(member(tree, elm))
     tree <- remove(tree, elm)
     expect_false(member(tree, elm))
+  }
+
+
+  # check balanced-ness ----
+
+  # ordered...
+  tree <- empty_red_black_tree()
+  for (elm in 1:1000)
+    tree <- insert(tree, elm)
+  depth_range <- min_max_depth(tree)
+  expect_true(2 * depth_range[1] >= depth_range[2])
+
+  # reverse
+  tree <- empty_red_black_tree()
+  for (elm in rev(1:1000))
+    tree <- insert(tree, elm)
+  depth_range <- min_max_depth(tree)
+  expect_true(2 * depth_range[1] >= depth_range[2])
+
+  # random order
+  for (iteration in 1:10) {
+    tree <- empty_red_black_tree()
+    for (elm in sample(1:200))
+      tree <- insert(tree, elm)
+    depth_range <- min_max_depth(tree)
+    expect_true(2 * depth_range[1] >= depth_range[2])
   }
 })
