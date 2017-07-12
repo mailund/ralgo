@@ -1,5 +1,105 @@
 ## Generic functions for search trees ###############
 
+st_member <- function(x, elm, candidate = NA) {
+  if (is_empty(x)) return(!is.na(candidate) && elm == candidate)
+  if (elm < x$value) st_member(x$left, elm, candidate)
+  else st_member(x$right, elm, x$value)
+}
+
+#' @method member search_tree
+#' @export
+member.search_tree <- function(x, elm, ...) {
+  return(st_member(x, elm))
+}
+
+st_leftmost <- function(tree) {
+  while (!is_empty(tree)) {
+    value <- tree$value
+    tree <- tree$left
+  }
+  value
+}
+
+
+
+node_number_annotate_tree <- function(tree, i = 1) {
+  if (is_empty(tree)) {
+    tree$dfn <- i
+  } else {
+    left <- node_number_annotate_tree(tree$left, i)
+    right <- node_number_annotate_tree(tree$right, left$dfn + 1)
+    tree$dfn <- right$dfn + 1
+    tree$left <- left
+    tree$right <- right
+  }
+  tree
+}
+
+depth_first_visit_binary_tree <- function(tree, visitor) {
+  if (!is_empty(tree)) {
+    depth_first_visit_binary_tree(tree$left, visitor)
+    depth_first_visit_binary_tree(tree$right, visitor)
+  }
+  visitor(tree)
+}
+
+# function for extracting a graph from a tree
+extract_graph <- function(tree) UseMethod("extract_graph")
+
+#' @import tibble
+extract_graph.search_tree <- function(tree) {
+
+  n <- tree$dfn
+  values <- vector("numeric", length = n)
+  from <- vector("integer", length = n - 1)
+  to <- vector("integer", length = n - 1)
+  edge_idx <- 1
+
+  extract <- function(tree) {
+    # we change the index so the root is number 1 -- that is easier
+    i <- n - tree$dfn + 1
+    values[i] <<- ifelse(is.na(tree$value), "", tree$value)
+
+    if (!is_empty(tree)) {
+      j <- n - tree$left$dfn + 1
+      from[edge_idx] <<- i
+      to[edge_idx] <<- j
+      edge_idx <<- edge_idx + 1
+
+      k <- n - tree$right$dfn + 1
+      from[edge_idx] <<- i
+      to[edge_idx] <<- k
+      edge_idx <<- edge_idx + 1
+    }
+  }
+
+  depth_first_visit_binary_tree(tree, extract)
+  nodes <- tibble(value = values)
+  edges <- tibble(from = from, to = to)
+  list(nodes = nodes, edges = edges)
+}
+
+#' @import ggraph
+#' @import tidygraph
+#' @method plot search_tree
+#' @export
+plot.search_tree <- function(x, ...) {
+  info <- x %>%
+    node_number_annotate_tree %>%
+    extract_graph
+
+  tbl_graph(info$nodes, info$edges) %>%
+    mutate(leaf = node_is_leaf()) %>%
+    ggraph(layout = "tree") +
+    scale_x_reverse() +
+    geom_edge_link() +
+    geom_node_point(aes_(filter = quote(leaf)), size = 2, shape = 21, fill = "black") +
+    geom_node_point(aes_(filter = quote(!leaf)), size = 10, shape = 21, fill = "white") +
+    theme_graph()
+}
+
+
+
 ## unbalanced search tree ############################
 search_tree_node <- function(
   value
@@ -20,7 +120,8 @@ empty_search_tree <- function() empty_search_tree_node
 
 #' @method is_empty unbalanced_search_tree
 #' @export
-is_empty.unbalanced_search_tree <- function(x) identical(x, empty_search_tree_node)
+is_empty.unbalanced_search_tree <- function(x)
+  is.null(x$left) && is.null(x$right)
 
 
 st_insert <- function(tree, elm) {
@@ -37,26 +138,6 @@ st_insert <- function(tree, elm) {
 #' @export
 insert.unbalanced_search_tree <- function(x, elm, ...) {
   st_insert(x, elm)
-}
-
-st_member <- function(x, elm, candidate = NA) {
-  if (is_empty(x)) return(!is.na(candidate) && elm == candidate)
-  if (elm < x$value) st_member(x$left, elm, candidate)
-  else st_member(x$right, elm, x$value)
-}
-
-#' @method member search_tree
-#' @export
-member.search_tree <- function(x, elm, ...) {
-  return(st_member(x, elm))
-}
-
-st_leftmost <- function(tree) {
-  while (!is_empty(tree)) {
-    value <- tree$value
-    tree <- tree$left
-  }
-  value
 }
 
 st_remove <- function(tree, elm) {
@@ -90,9 +171,9 @@ remove.unbalanced_search_tree <- function(x, elm, ...) {
 ## Red-Black search tree ############################
 
 # colours
-RED <- 0
-BLACK <- 1
-DOUBLE_BLACK <- 2
+RED <- 1
+BLACK <- 2
+DOUBLE_BLACK <- 3
 
 # helper function
 red_black_tree_node <- function(
@@ -106,7 +187,7 @@ red_black_tree_node <- function(
 }
 
 # special node for empty trees
-empty_red_black_tree_node <- red_black_tree_node(RED, NA, NULL, NULL)
+empty_red_black_tree_node <- red_black_tree_node(BLACK, NA, NULL, NULL)
 
 #' Create empty red-black search tree
 #' @return New, empty, red-black search tree
@@ -206,6 +287,8 @@ member.red_black_tree <- function(x, elm, ...) {
 }
 
 rbt_rotate <- function(colour, value, left, right) {
+  a <- b <- c <- d <- e <- x <- y <- z <- NULL # Setting these to avoid warnings
+
   # first case
   if (pattern_match(a_x_b = left, c = right$left, d = right$right,
                     y = value, z = right$value,
@@ -324,3 +407,43 @@ rbt_remove <- function(tree, elm) {
 remove.red_black_tree <- function(x, elm, ...) {
   rbt_remove(x, elm)
 }
+
+
+#' @import tibble
+extract_graph.red_black_tree <- function(tree) {
+  n <- tree$dfn
+  colours <- vector("numeric", length = n)
+  extract <- function(tree) {
+    # we change the index so the root is number 1 -- that is easier
+    i <- n - tree$dfn + 1
+    colours[i] <<- tree$colour
+  }
+  depth_first_visit_binary_tree(tree, extract)
+
+  graph <- NextMethod()
+  RB <- c("Red", "Black", "Double black")
+  nodes <- graph$nodes %>% add_column(colour = RB[colours])
+  edges <- graph$edges
+  list(nodes = nodes, edges = edges)
+}
+
+#' @import ggraph
+#' @import ggplot2
+#' @method plot red_black_tree
+#' @export
+plot.red_black_tree <- function(x, ...) {
+  NextMethod() +
+    scale_fill_manual("Colour",
+                      values = c("Red" = "white",
+                                 "Black" = "black",
+                                 "Double black" = "lightgray")) +
+    geom_node_point(aes_(filter = quote(leaf), fill = quote(colour)), size = 2, shape = 21) +
+    geom_node_point(aes_(filter = quote(!leaf), fill = quote(colour)), size = 10, shape = 21) +
+    geom_node_text(aes_(filter = quote(colour == "Black"), label = quote(value)),
+                   colour = 'white', vjust = 0.4) +
+    geom_node_text(aes_(filter = quote(colour == "Double black"), label = quote(value)),
+                   colour = 'black', vjust = 0.4) +
+    geom_node_text(aes_(filter = quote(colour == "Red"), label = quote(value)),
+                   colour = 'black', vjust = 0.4)
+}
+

@@ -53,6 +53,14 @@ min_max_depth <- function(tree) {
   c(min_depth, max_depth)
 }
 
+rbt_invariant_red <- function(tree) {
+  if (is_empty(tree))
+    return(TRUE)
+  if (tree$colour == RED && (tree$left$colour == RED || tree$right$colour == RED))
+    return(FALSE)
+  return(rbt_invariant_red(tree$left) && rbt_invariant_red(tree$right))
+}
+
 test_that("We can construct and access a red-black search tree", {
   tree <- empty_red_black_tree()
   expect_true(is_empty(tree))
@@ -97,6 +105,12 @@ test_that("We can construct and access a red-black search tree", {
     expect_false(member(tree, elm))
   }
 
+  # check invariants ---
+  # ordered...
+  tree <- empty_red_black_tree()
+  for (elm in 1:10)
+    tree <- insert(tree, elm)
+  expect_true(rbt_invariant_red(tree))
 
   # check balanced-ness ----
 
@@ -132,7 +146,7 @@ test_that("We can construct and access a red-black search tree", {
     #for (elm in rev(1:100)) # remove half the elements
       new_tree <- remove(new_tree, elm)
     depth_range <- min_max_depth(new_tree)
-    print(depth_range)
+    #print(depth_range)
     #expect_true(2 * depth_range[1] >= depth_range[2])
   }
 
