@@ -15,4 +15,3 @@ The updated deque
 \description{
 Remove the front element of a deque
 }
-

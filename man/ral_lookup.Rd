@@ -17,4 +17,3 @@ The value at index idx
 \description{
 Get the value at a given index of a random access list.
 }
-

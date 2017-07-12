@@ -12,4 +12,3 @@ an empty binomial heap
 \description{
 Construct an empty binomial heap
 }
-

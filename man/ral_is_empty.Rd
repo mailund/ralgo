@@ -15,4 +15,3 @@ whether ral is empty
 \description{
 Check if a random access list is empty
 }
-

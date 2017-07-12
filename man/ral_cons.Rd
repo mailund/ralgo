@@ -18,4 +18,3 @@ New random access list with elem at the front
 Empty random access lists are represented as NULL, so to create lists
 start from there.
 }
-

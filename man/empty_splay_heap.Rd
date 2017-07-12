@@ -12,4 +12,3 @@ an empty splay heap
 \description{
 Construct an empty splay heap
 }
-

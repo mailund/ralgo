@@ -12,4 +12,3 @@ an empty stack.
 \description{
 Create an empty stack.
 }
-

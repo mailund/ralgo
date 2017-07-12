@@ -17,4 +17,3 @@ The concatenation of l1 and l2.
 \description{
 This function is linear in the length of the first list.
 }
-

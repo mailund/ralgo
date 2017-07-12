@@ -115,11 +115,25 @@ test_that("We can construct and access a red-black search tree", {
   expect_true(2 * depth_range[1] >= depth_range[2])
 
   # random order
-  for (iteration in 1:10) {
+  for (iteration in 1:5) {
     tree <- empty_red_black_tree()
     for (elm in sample(1:200))
       tree <- insert(tree, elm)
     depth_range <- min_max_depth(tree)
     expect_true(2 * depth_range[1] >= depth_range[2])
   }
+
+  # with deletion... keep the last constructed tree to work on to keep the tests fast
+  depth_range <- min_max_depth(tree)
+  print(depth_range)
+  for (iteration in 1:5) {
+    new_tree <- tree
+    for (elm in sample(1:200, size = 100)) # remove half the elements
+    #for (elm in rev(1:100)) # remove half the elements
+      new_tree <- remove(new_tree, elm)
+    depth_range <- min_max_depth(new_tree)
+    print(depth_range)
+    #expect_true(2 * depth_range[1] >= depth_range[2])
+  }
+
 })

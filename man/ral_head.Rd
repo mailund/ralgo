@@ -15,4 +15,3 @@ The front element
 \description{
 Get the front element of a random access list
 }
-

@@ -18,4 +18,3 @@ An R vector with the elements found in the linked list.
 \description{
 Translate a linked list into an R vector.
 }
-

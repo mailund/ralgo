@@ -15,4 +15,3 @@ the length of the list
 \description{
 Compute the length of a linked list
 }
-

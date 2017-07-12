@@ -45,14 +45,10 @@ st_member <- function(x, elm, candidate = NA) {
   else st_member(x$right, elm, x$value)
 }
 
-#' @method member unbalanced_search_tree
+#' @method member search_tree
 #' @export
-member.unbalanced_search_tree <- function(x, elm, ...) {
+member.search_tree <- function(x, elm, ...) {
   return(st_member(x, elm))
-  if (is_empty(x)) return(FALSE)
-  if (x$value == elm) return(TRUE)
-  if (elm < x$value) member(x$left, elm)
-  else member(x$right, elm)
 }
 
 st_leftmost <- function(tree) {

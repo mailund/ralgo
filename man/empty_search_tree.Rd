@@ -12,4 +12,3 @@ New empty, unbalanced, search tree
 \description{
 Create empty unbalanced search tree
 }
-

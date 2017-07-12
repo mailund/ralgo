@@ -17,4 +17,3 @@ a new list containing the elements of lst except the first n
 \description{
 Get a new list containing the elements when n elements have been removed from a list/
 }
-
