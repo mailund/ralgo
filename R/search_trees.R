@@ -277,16 +277,6 @@ insert.red_black_tree <- function(x, elm, ...) {
   new_tree
 }
 
-#' @method member red_black_tree
-#' @export
-member.red_black_tree <- function(x, elm, ...) {
-  if (is_empty(x)) return(FALSE)
-  if (x$value == elm) return(TRUE)
-
-  if (elm < x$value) member(x$left, elm)
-  else member(x$right, elm)
-}
-
 rbt_rotate <- function(colour, value, left, right) {
   a <- b <- c <- d <- e <- x <- y <- z <- NULL # Setting these to avoid warnings
 
