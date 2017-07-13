@@ -95,6 +95,7 @@ plot.search_tree <- function(x, ...) {
     geom_edge_link() +
     geom_node_point(aes_(filter = quote(leaf)), size = 2, shape = 21, fill = "black") +
     geom_node_point(aes_(filter = quote(!leaf)), size = 10, shape = 21, fill = "white") +
+    geom_node_text(aes(label = value), vjust = 0.4) +
     theme_graph()
 }
 
