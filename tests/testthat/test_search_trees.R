@@ -159,11 +159,34 @@ test_that("We can construct and access a red-black search tree", {
     expect_true(rbt_invariant_balanced(tree))
   }
 
-  # with deletion... keep the last constructed tree to work on to keep the tests fast
+  # with deletion...
+  make_increasing <- function() {
+    tree <- empty_red_black_tree()
+    for (i in 1:100)
+      tree <- insert(tree, i)
+    tree
+  }
+  make_random <- function() {
+    tree <- empty_red_black_tree()
+    for (i in sample(1:100))
+      tree <- insert(tree, i)
+    tree
+  }
   for (iteration in 1:5) {
-    new_tree <- tree
-    for (elm in sample(1:200, size = 100)) # remove half the elements
-      new_tree <- remove(new_tree, elm)
+    tree <- make_increasing()
+    for (elm in sample(1:100, size = 50)) # remove half the elements
+      tree <- remove(tree, elm)
+    # remove some non-existing elements as well...
+    for (elm in sample(200:300, size = 5)) # remove half the elements
+      tree <- remove(tree, elm)
+
+    expect_true(rbt_invariant_red(tree))
+    expect_true(rbt_invariant_black(tree))
+    expect_true(rbt_invariant_balanced(tree))
+
+    tree <- make_random()
+    for (elm in sample(1:100, size = 50)) # remove half the elements
+      tree <- remove(tree, elm)
     expect_true(rbt_invariant_red(tree))
     expect_true(rbt_invariant_black(tree))
     expect_true(rbt_invariant_balanced(tree))

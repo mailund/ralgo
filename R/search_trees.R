@@ -375,7 +375,7 @@ rbt_remove <- function(tree, elm) {
       if (tree$colour == BLACK)
         return(red_black_tree_node(DOUBLE_BLACK, NA, NULL, NULL))
       else
-        return(red_black_tree_node(RED, NA, NULL, NULL))
+        return(red_black_tree_node(BLACK, NA, NULL, NULL))
 
     } else if (is_empty(a) || is_empty(b)) { # one empty child
       non_empty <- if (is_empty(a)) b else a
