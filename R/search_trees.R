@@ -95,7 +95,7 @@ plot.search_tree <- function(x, ...) {
     geom_edge_link() +
     geom_node_point(aes_(filter = quote(leaf)), size = 2, shape = 21, fill = "black") +
     geom_node_point(aes_(filter = quote(!leaf)), size = 10, shape = 21, fill = "white") +
-    geom_node_text(aes(label = value), vjust = 0.4) +
+    geom_node_text(aes_(label = quote(value)), vjust = 0.4) +
     theme_graph()
 }
 
@@ -312,6 +312,7 @@ rbt_rotate <- function(colour, value, left, right) {
                            a_x_b$colour == DOUBLE_BLACK,
                            right$colour == BLACK)) {
 
+    a_x_b$colour <- BLACK
     new_left <- red_black_tree_node(RED, y, a_x_b, c)
     rbt_balance(DOUBLE_BLACK, z, new_left, d)
 
@@ -321,6 +322,7 @@ rbt_rotate <- function(colour, value, left, right) {
                            colour == BLACK,
                            c_z_d$colour == DOUBLE_BLACK)) {
 
+    c_z_d$colour <- BLACK
     new_right <- red_black_tree_node(RED, y, b, c_z_d)
     rbt_balance(DOUBLE_BLACK, x, a, new_right)
 
@@ -396,7 +398,9 @@ rbt_remove <- function(tree, elm) {
 #' @method remove red_black_tree
 #' @export
 remove.red_black_tree <- function(x, elm, ...) {
-  rbt_remove(x, elm)
+  new_tree <- rbt_remove(x, elm)
+  new_tree$colour <- BLACK
+  new_tree
 }
 
 

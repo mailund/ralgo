@@ -5,3 +5,4 @@ README.Rmd
 ^codecov\.yml$
 ^LICENSE$
 ^README_files/.*$
+^scratch/.*$
