@@ -49,7 +49,7 @@ leftist_heap_node <- function(
   , rank = 0
   ) {
   structure(list(left = left, value = value, right = right, rank = rank),
-            class = c("leftist_heap", "heap"))
+            class = c("leftist_heap", "heap", "binary_tree"))
 }
 
 # Dummy object used to represent an empty heap
@@ -66,7 +66,7 @@ empty_leftist_heap <- function() empty_leftist_heap_node
 #' @method is_empty leftist_heap
 #' @export
 is_empty.leftist_heap <- function(x)
-  identical(x, empty_leftist_heap_node)
+  is.null(x$left) && is.null(x$right)
 
 #' @method find_minimal leftist_heap
 #' @export
