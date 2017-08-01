@@ -256,8 +256,15 @@ delete_minimal.binomial_heap <- function(heap) {
 
 # helper function for creating nodes
 splay_tree_node <- function(value, left = NULL, right = NULL) {
-  list(left = left, value = value, right = right)
+  structure(list(left = left, value = value, right = right),
+            class = c("splay_node", "binary_tree"))
 }
+
+empty_splay_node <- function()
+  splay_tree_node(NA)
+
+is_empty.splay_node <- function(x)
+  is.na(x$value) && is.null(x$left) && is.null(x$right)
 
 splay_heap <- function(min_value, splay_tree) {
   structure(list(min_value = min_value, tree = splay_tree),
@@ -267,14 +274,14 @@ splay_heap <- function(min_value, splay_tree) {
 #' Construct an empty splay heap
 #' @return an empty splay heap
 #' @export
-empty_splay_heap <- function() splay_heap(NA, NULL)
+empty_splay_heap <- function() splay_heap(NA, empty_splay_node())
 
 #' Test whether a splay heap is empty
 #' @param x splay heap
 #' @return Whether the heap is empty
 #' @method is_empty splay_heap
 #' @export
-is_empty.splay_heap <- function(x) is.null(x$tree)
+is_empty.splay_heap <- function(x) is_empty(x$tree)
 
 #' @method find_minimal splay_heap
 #' @export
@@ -283,13 +290,13 @@ find_minimal.splay_heap <- function(heap) {
 }
 
 splay_find_minimal_value <- function(tree) {
-  if (is.null(tree)) NA
-  else if (is.null(tree$left)) tree$value
+  if (is_empty(tree)) NA
+  else if (is_empty(tree$left)) tree$value
   else splay_find_minimal_value(tree$left)
 }
 
 splay_delete_minimal_value <- function(tree) {
-  if (is.null(tree$left)) {
+  if (is_empty(tree$left)) {
     tree$right
 
   } else {
@@ -299,7 +306,7 @@ splay_delete_minimal_value <- function(tree) {
     y <- tree$value
     c <- tree$right
 
-    if (is.null(a))
+    if (is_empty(a))
       splay_tree_node(left = b, value = y, right = c)
     else
       splay_tree_node(
@@ -324,14 +331,14 @@ is_case_1 <- function(pivot, tree) {
   a <- tree$left
   x <- tree$value
   b <- tree$right
-  x <= pivot && is.null(b)
+  x <= pivot && is_empty(b)
 }
 
 transform_case_1 <- function(pivot, tree) {
   a <- tree$left
   x <- tree$value
   b <- tree$right
-  list(smaller = tree, larger = NULL)
+  list(smaller = tree, larger = empty_splay_node())
 }
 
 is_case_2 <- function(pivot, tree) {
@@ -404,14 +411,14 @@ is_case_4 <- function(pivot, tree) {
   a <- tree$left
   x <- tree$value
   b <- tree$right
-  x > pivot && is.null(a)
+  x > pivot && is_empty(a)
 }
 
 transform_case_4 <- function(pivot, tree) {
   a <- tree$left
   x <- tree$value
   b <- tree$right
-  list(smaller = NULL, larger = tree)
+  list(smaller = empty_splay_node(), larger = tree)
 }
 
 is_case_5 <- function(pivot, tree) {
@@ -481,8 +488,8 @@ transform_case_6 <- function(pivot, tree) {
 }
 
 partition <- function(pivot, tree) {
-  if (is.null(tree))
-    list(smaller = NULL, larger = NULL)
+  if (is_empty(tree))
+    list(smaller = empty_splay_node(), larger = empty_splay_node())
   else if (is_case_1(pivot, tree))
     transform_case_1(pivot, tree)
   else if (is_case_2(pivot, tree))
@@ -513,8 +520,8 @@ insert.splay_heap <- function(x, elm, ...) {
 }
 
 merge_splay_trees <- function(x, y) {
-  if (is.null(x)) return(y)
-  if (is.null(y)) return(x)
+  if (is_empty(x)) return(y)
+  if (is_empty(y)) return(x)
 
   a <- x$left
   val <- x$value
@@ -537,3 +544,28 @@ merge.splay_heap <- function(x, y, ...) {
   splay_heap(min_value = new_min_value, splay_tree = new_tree)
 }
 
+#' @method plot splay_heap
+#' @export
+plot.splay_heap <- function(x, ...) {
+  info <- x$tree %>%
+    node_number_annotate_tree %>%
+    extract_graph
+
+  # modify indices to make a new root...
+  nodes <- tibble(value = c(find_minimal(x), info$nodes$value),
+                  type = c("Root", rep("Vertex", length(info$nodes$value))))
+  edges <- tibble(from = c(1, info$edges$from + 1),
+                  to = c(2, info$edges$to + 1))
+
+  tbl_graph(nodes, edges) %>%
+    mutate(leaf = node_is_leaf()) %>%
+    ggraph(layout = "tree") +
+    scale_x_reverse() +
+    geom_edge_link() +
+    geom_node_point(aes_(filter = quote(leaf)), size = 2, shape = 21, fill = "black") +
+    geom_node_point(aes_(filter = quote(type == "Vertex" & !leaf)), size = 10, shape = 21, fill = "white") +
+    geom_node_point(aes_(filter = quote(type == "Root")), size = 10, shape = 19, fill = "black") +
+    geom_node_text(aes_(label = quote(value)), vjust = 0.4) +
+    geom_node_text(aes_(filter = quote(type == "Root"), label = quote(value)), vjust = 0.4, color = "white") +
+    theme_graph()
+}
