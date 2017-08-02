@@ -9,16 +9,12 @@ for (i in 1:10)
 plot(tree)
 
 heap <- empty_leftist_heap()
-for (i in 1:10)
+for (i in 1:15)
   heap <- insert(heap, i)
-plot(heap)
-heap <- delete_minimal(heap)
-plot(heap)
-heap <- delete_minimal(heap)
 plot(heap)
 
 heap <- empty_splay_heap()
-for (i in 1:10)
+for (i in 1:15)
   heap <- insert(heap, i)
 plot(heap)
 
@@ -33,4 +29,8 @@ plot(heap)
 heap <- delete_minimal(heap)
 plot(heap)
 
+heap <- empty_binomial_heap()
+for (i in 1:15)
+  heap <- insert(heap, i)
+plot(heap)
 

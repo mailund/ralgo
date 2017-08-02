@@ -250,7 +250,121 @@ delete_minimal.binomial_heap <- function(heap) {
   binomial_heap(new_min_value, new_nodes)
 }
 
+number_binomial_trees <- function(trees, n) {
+  if (is_empty(trees)) {
+    empty_list()
+  } else {
+    this <- list_head(trees)
+    rest <- number_binomial_trees(list_tail(trees), n)
+    new_n <- ifelse(is_empty(rest), n, list_head(rest)$number)
+    new_subtrees <- number_binomial_trees(this$trees, new_n)
+    new_n <- ifelse(is_empty(new_subtrees), new_n, list_head(new_subtrees)$number)
+    new_tree <- list(number = new_n + 1, value = this$value, trees = new_subtrees)
+    list_cons(new_tree, rest)
+  }
+}
 
+number_binomial_heap_nodes <- function(nodes, n = 0) {
+  if (is_empty(nodes)) {
+    empty_list()
+  } else {
+    this <- list_head(nodes)
+    rest <- number_binomial_heap_nodes(list_tail(nodes), n)
+    new_n <- ifelse(is_empty(rest), n, list_head(rest)$number)
+
+    # unfortunately special case with a single tree...
+    tree <- this$tree
+    subtrees <- number_binomial_trees(tree$trees, new_n)
+    new_n <- ifelse(is_empty(subtrees), new_n, list_head(subtrees)$number)
+    new_tree <- list(number = new_n + 1, value = tree$value, trees = subtrees)
+
+    new_node <- list(number = new_n + 2, rank = this$rank, tree = new_tree)
+    list_cons(new_node, rest)
+  }
+}
+
+number_binomial_heap <- function(heap) {
+  heap_nodes <- number_binomial_heap_nodes(heap$heap_nodes, 0)
+  heap_nodes
+}
+
+extract_binomial_heap_nodes_graph <- function(nodes) {
+  n <- list_head(nodes)$number
+  values <- vector("numeric", length = n)
+  heap_nodes <- vector("logical", length = n)
+  from <- vector("integer", length = n - 1)
+  to <- vector("integer", length = n - 1)
+  edge_idx <- 1
+
+  extract_tree <- function(tree, parent) {
+    values[tree$number] <<- tree$value
+    heap_nodes[tree$number] <<- FALSE
+    from[edge_idx] <<- parent
+    to[edge_idx] <<- tree$number
+    edge_idx <<- edge_idx + 1
+    extract_trees(tree$trees, tree$number)
+  }
+
+  extract_trees <- function(trees, parent) {
+    if (!is_empty(trees)) {
+      extract_tree(list_head(trees), parent)
+      extract_trees(list_tail(trees), parent)
+    }
+  }
+
+  extract <- function(nodes) {
+    if (!is_empty(nodes)) {
+      node <- list_head(nodes)
+      values[node$number] <<- node$rank
+      heap_nodes[node$number] <<- TRUE
+
+      if (!is_empty(list_tail(nodes))) {
+        next_node <- list_head(list_tail(nodes))
+        from[edge_idx] <<- node$number
+        to[edge_idx] <<- next_node$number
+        edge_idx <<- edge_idx + 1
+      }
+
+      extract_tree(node$tree, node$number)
+      extract(list_tail(nodes))
+    }
+  }
+
+  extract(nodes)
+
+  # FIXME
+  from[from == 0] <- 1
+  to[to == 0] <- 1
+
+  list(nodes = tibble(heap_node = heap_nodes, value = values),
+       edges = tibble(from = from, to = to))
+}
+
+#' @method plot binomial_heap
+#' @export
+plot.binomial_heap <- function(x, ...) {
+  info <- x %>%
+    number_binomial_heap %>%
+    extract_binomial_heap_nodes_graph
+
+  tbl_graph(info$nodes, info$edges) %>%
+    mutate(leaf = node_is_leaf()) %>%
+    ggraph(layout = "tree") +
+    scale_x_reverse() +
+    geom_edge_link() +
+    geom_node_point(aes_(filter = quote(heap_node)),
+                    size = 10, shape = 21, fill = "black") +
+    geom_node_text(aes_(filter = quote(heap_node),
+                        label = quote(value)),
+                   vjust = 0.4, color = "white") +
+    geom_node_point(aes_(filter = quote(!heap_node)),
+                    size = 10, shape = 21, fill = "white") +
+    geom_node_text(aes_(filter = quote(!heap_node),
+                        label = quote(value)),
+                   vjust = 0.4, color = "black") +
+    theme_graph()
+
+}
 
 ## Splay heap ##############################
 
