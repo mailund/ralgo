@@ -647,7 +647,6 @@ partition <- function(pivot, tree) {
   else stop("Unknown case")
 }
 
-
 #' @method insert splay_heap
 #' @export
 insert.splay_heap <- function(x, elm, ...) {
