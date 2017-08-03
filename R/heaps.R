@@ -105,6 +105,17 @@ insert.leftist_heap <- function(x, elm, ...) {
   merge(x, leftist_heap_node(elm))
 }
 
+#' @method size leftist_heap
+#' @export
+size.leftist_heap <- function(x) {
+  f <- function(x) {
+    if (is_empty(x)) 0
+    else 1 + f(x$left) + f(x$right)
+  }
+  f(x)
+}
+
+
 
 ## Binomial heap ##############################
 
@@ -250,6 +261,27 @@ delete_minimal.binomial_heap <- function(heap) {
   binomial_heap(new_min_value, new_nodes)
 }
 
+
+#' @method size binomial_heap
+#' @export
+size.binomial_heap <- function(x) {
+  tree_size <- function(x) {
+    1 + tree_list_size(x$trees)
+  }
+  tree_list_size <- function(x) {
+    if (is_empty(x)) 0
+    else tree_size(list_head(x)) + tree_list_size(list_tail(x))
+  }
+  heap_size <- function(x) {
+    if (is_empty(x)) 0
+    else tree_size(list_head(x)$tree) + heap_size(list_tail(x))
+  }
+  heap_size(x$heap_nodes)
+}
+
+
+
+
 number_binomial_trees <- function(trees, n) {
   if (is_empty(trees)) {
     empty_list()
@@ -331,10 +363,6 @@ extract_binomial_heap_nodes_graph <- function(nodes) {
   }
 
   extract(nodes)
-
-  # FIXME
-  from[from == 0] <- 1
-  to[to == 0] <- 1
 
   list(nodes = tibble(heap_node = heap_nodes, value = values),
        edges = tibble(from = from, to = to))
@@ -658,6 +686,17 @@ merge.splay_heap <- function(x, y, ...) {
   splay_heap(min_value = new_min_value, splay_tree = new_tree)
 }
 
+#' @method size splay_heap
+#' @export
+size.splay_heap <- function(x) {
+  f <- function(x) {
+    if (is_empty(x)) 0
+    else 1 + f(x$left) + f(x$right)
+  }
+  f(x$tree)
+}
+
+
 #' @method plot splay_heap
 #' @export
 plot.splay_heap <- function(x, ...) {
@@ -683,3 +722,4 @@ plot.splay_heap <- function(x, ...) {
     geom_node_text(aes_(filter = quote(type == "Root"), label = quote(value)), vjust = 0.4, color = "white") +
     theme_graph()
 }
+

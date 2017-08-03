@@ -48,6 +48,11 @@ remove <- function(x, elm, ...) UseMethod("remove")
 #' @export
 list_length <- function(lst) UseMethod("list_length")
 
+#' Get the size of a data structure
+#' @param x The data structure
+#' @return The number of elements in the data structure
+#' @export
+size <- function(x) UseMethod("size")
 
 
 ## Linked lists #########################
