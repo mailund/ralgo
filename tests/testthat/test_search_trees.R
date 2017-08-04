@@ -43,6 +43,48 @@ test_that("We can construct and access a (unbalanced) search tree", {
 })
 
 
+test_that("We can construct and access a splay tree", {
+  tree <- empty_splay_tree()
+  expect_true(is_empty(tree))
+  expect_false(member(tree, 1))
+
+  tree <- insert(tree, 1)
+  expect_false(is_empty(tree))
+  expect_true(member(tree, 1))
+  expect_false(member(tree, 5))
+
+  tree <- insert(tree, 5)
+  expect_false(is_empty(tree))
+  expect_true(member(tree, 1))
+  expect_true(member(tree, 5))
+
+  for (elm in 1:10) {
+    tree <- insert(tree, elm)
+  }
+
+  expect_false(member(tree, 0))
+  for (elm in 1:10) expect_true(member(tree, elm))
+  expect_false(member(tree, 11))
+
+  for (elm in 1:10) {
+    expect_true(member(tree, elm))
+    tree <- remove(tree, elm)
+    expect_false(member(tree, elm))
+  }
+  for (elm in 1:10)
+    expect_false(member(tree, elm))
+  expect_true(is_empty(tree))
+
+  for (elm in sample(1:10)) {
+    tree <- insert(tree, elm)
+  }
+  for (elm in sample(1:10)) {
+    expect_true(member(tree, elm))
+    tree <- remove(tree, elm)
+    expect_false(member(tree, elm))
+  }
+})
+
 
 rbt_invariant_red <- function(tree) {
   if (is_empty(tree))
