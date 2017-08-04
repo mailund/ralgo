@@ -21,10 +21,10 @@ insert.splay_tree <- function(x, elm, ...) {
 
   part <- partition(elm, x$tree)
 
-  if (!is_empty(part$smaller))
-    print(plot(part$smaller) + ggtitle("smaller"))
-  if (!is_empty(part$larger))
-    print(plot(part$larger) + ggtitle("larger"))
+  #if (!is_empty(part$smaller))
+  #  print(plot(part$smaller) + ggtitle("smaller"))
+  #if (!is_empty(part$larger))
+  #  print(plot(part$larger) + ggtitle("larger"))
 
   x$tree <- splay_tree_node(
     value = elm,
@@ -104,17 +104,17 @@ splay <- function(tree, v) {
                            a = s$left,
                            b = s$right,
                            c = tree$right$left,
-                           d = tree$right)) {
+                           d = tree$left)) {
     splay_tree_node(
       value = x,
       left = splay_tree_node(
         value = y,
         left = splay_tree_node(
           value = z,
-          left = a,
-          right = b),
-        right = c),
-      right = d)
+          left = d,
+          right = c),
+        right = a),
+      right = b)
 
   # -- Zig-zag & zag-zig ------------------------
   } else if (pattern_match(z = tree$value,
@@ -140,7 +140,7 @@ splay <- function(tree, v) {
                            b = s$left,
                            c = s$right,
                            d = tree$right$right)) {
-    splay_tree_node(
+  splay_tree_node(
       value = x,
       left = splay_tree_node(
         value = y,

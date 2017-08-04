@@ -500,15 +500,6 @@ transform_case_2 <- function(pivot, tree) {
   b1 <- tree$right$left
   y <- tree$right$value
   b2 <- tree$right$right
-
-  if (!is_empty(a))
-    print(plot(a) + ggtitle("case 2 a"))
-  if (!is_empty(b1))
-    print(plot(b1) + ggtitle("case 2 b1"))
-  if (!is_empty(b2))
-    print(plot(b2) + ggtitle("case 2 b2"))
-
-
   part <- partition(pivot, b2)
   smaller <- splay_tree_node(
     left = splay_tree_node(
@@ -520,20 +511,6 @@ transform_case_2 <- function(pivot, tree) {
     right = part$smaller
   )
   larger <- part$larger
-
-
-  if (!is_empty(part$smaller))
-    print(plot(part$smaller) + ggtitle("case 2 part$smaller"))
-  if (!is_empty(part$larger))
-    print(plot(part$larger) + ggtitle("case 2 part$larger"))
-
-
-
-  if (!is_empty(smaller))
-    print(plot(smaller) + ggtitle("case 2 smaller"))
-  if (!is_empty(larger))
-    print(plot(larger) + ggtitle("case 2 larger"))
-
   list(smaller = smaller, larger = larger)
 }
 
@@ -554,7 +531,6 @@ transform_case_3 <- function(pivot, tree) {
   b1 <- tree$right$left
   y <- tree$right$value
   b2 <- tree$right$right
-
   part <- partition(pivot, b1)
   smaller <- splay_tree_node(
     left = a,
@@ -566,13 +542,6 @@ transform_case_3 <- function(pivot, tree) {
     value = y,
     right = b2
   )
-
-  if (!is_empty(smaller))
-    print(plot(smaller) + ggtitle("case 3 smaller"))
-  if (!is_empty(larger))
-    print(plot(larger) + ggtitle("case 3 larger"))
-
-
   list(smaller = smaller, larger = larger)
 }
 
@@ -607,7 +576,6 @@ transform_case_5 <- function(pivot, tree) {
   a2 <- tree$left$right
   x <- tree$value
   b <- tree$right
-
   part <- partition(pivot, a2)
   smaller <- splay_tree_node(
     left = a1,
@@ -619,19 +587,6 @@ transform_case_5 <- function(pivot, tree) {
     value = x,
     right = b
   )
-
-  if (!is_empty(a1))
-    print(plot(a1) + ggtitle("case 5 a1"))
-  if (!is_empty(a2))
-    print(plot(a2) + ggtitle("case 5 a2"))
-  if (!is_empty(b))
-    print(plot(b) + ggtitle("case 5 b"))
-  if (!is_empty(smaller))
-    print(plot(smaller) + ggtitle("case 5 smaller"))
-  if (!is_empty(larger))
-    print(plot(larger) + ggtitle("case 5 larger"))
-
-
   list(smaller = smaller, larger = larger)
 }
 
@@ -652,7 +607,6 @@ transform_case_6 <- function(pivot, tree) {
   a2 <- tree$left$right
   x <- tree$value
   b <- tree$right
-
   part <- partition(pivot, a1)
   smaller <- part$smaller
   larger <- splay_tree_node(
@@ -664,7 +618,6 @@ transform_case_6 <- function(pivot, tree) {
       right = b
     )
   )
-
   list(smaller = smaller, larger = larger)
 }
 
