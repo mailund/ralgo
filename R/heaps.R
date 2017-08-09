@@ -405,6 +405,8 @@ splay_tree_node <- function(value, left = NULL, right = NULL) {
 empty_splay_node <- function()
   splay_tree_node(NA)
 
+#' @method is_empty splay_node
+#' @export
 is_empty.splay_node <- function(x)
   is.na(x$value) && is.null(x$left) && is.null(x$right)
 
