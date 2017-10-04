@@ -280,7 +280,8 @@ size.binomial_heap <- function(x) {
 }
 
 
-
+# plotting code -- we don't test that
+# nocov start
 
 number_binomial_trees <- function(trees, n) {
   if (is_empty(trees)) {
@@ -393,6 +394,8 @@ plot.binomial_heap <- function(x, ...) {
     theme_graph()
 
 }
+
+# nocov end
 
 ## Splay heap ##############################
 
@@ -693,6 +696,8 @@ size.splay_heap <- function(x) {
 }
 
 
+# nocov start
+
 #' @method plot splay_heap
 #' @export
 plot.splay_heap <- function(x, ...) {
@@ -719,3 +724,4 @@ plot.splay_heap <- function(x, ...) {
     theme_graph()
 }
 
+# nocov end
