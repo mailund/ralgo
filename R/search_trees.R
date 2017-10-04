@@ -326,6 +326,9 @@ remove.red_black_tree <- function(x, elm, ...) {
 }
 
 
+# the following functions are only used for plotting, and I don't test that (don't know how to)
+# nocov start
+
 #' @import tibble
 extract_graph.red_black_tree <- function(tree) {
   n <- tree$dfn
@@ -364,3 +367,4 @@ plot.red_black_tree <- function(x, ...) {
                    colour = 'black', vjust = 0.4)
 }
 
+# nocov end
