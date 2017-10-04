@@ -43,3 +43,7 @@ test_that("We can construct and empty an extended queue", {
 test_that("We can construct and empty a lazy queue", {
   test_queue(empty_lazy_queue())
 })
+
+test_that("We can construct and empty a rebuild queue", {
+  test_queue(empty_rebuild_queue())
+})

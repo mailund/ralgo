@@ -1,23 +1,17 @@
 tree <- empty_splay_tree()
+for (x in 1:10)
+  tree <- insert(tree, x)
 
-(x <- sample(1:10))
-insert(tree, x[1])
-plot(tree)
+(p1 <- plot(tree) + ylim(-0.5, 10.5))
 
-insert(tree, x[2])
-plot(tree)
+member(tree, 4)
+(p2 <- plot(tree)+ ylim(-0.5, 5.5))
 
-insert(tree, x[3])
-plot(tree)
+member(tree, 8)
+(p3 <- plot(tree) + ylim(-0.5, 5.5))
 
-insert(tree, x[4])
-plot(tree)
+member(tree, 6)
+(p4 <- plot(tree) + ylim(-0.5, 5.5))
 
-insert(tree, x[5])
-plot(tree)
-
-insert(tree, x[6])
-plot(tree)
-
-insert(tree, x[6])
-plot(tree)
+library(ggpubr)
+ggarrange(p1, p2, p3, p4, labels = LETTERS[1:4])

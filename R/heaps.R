@@ -405,6 +405,8 @@ splay_tree_node <- function(value, left = NULL, right = NULL) {
 empty_splay_node <- function()
   splay_tree_node(NA)
 
+#' @method is_empty splay_node
+#' @export
 is_empty.splay_node <- function(x)
   is.na(x$value) && is.null(x$left) && is.null(x$right)
 
@@ -512,7 +514,6 @@ transform_case_2 <- function(pivot, tree) {
     right = part$smaller
   )
   larger <- part$larger
-
   list(smaller = smaller, larger = larger)
 }
 
@@ -533,7 +534,6 @@ transform_case_3 <- function(pivot, tree) {
   b1 <- tree$right$left
   y <- tree$right$value
   b2 <- tree$right$right
-
   part <- partition(pivot, b1)
   smaller <- splay_tree_node(
     left = a,
@@ -580,7 +580,6 @@ transform_case_5 <- function(pivot, tree) {
   a2 <- tree$left$right
   x <- tree$value
   b <- tree$right
-
   part <- partition(pivot, a2)
   smaller <- splay_tree_node(
     left = a1,
@@ -613,7 +612,6 @@ transform_case_6 <- function(pivot, tree) {
   a2 <- tree$left$right
   x <- tree$value
   b <- tree$right
-
   part <- partition(pivot, a1)
   smaller <- part$smaller
   larger <- splay_tree_node(
@@ -625,7 +623,6 @@ transform_case_6 <- function(pivot, tree) {
       right = b
     )
   )
-
   list(smaller = smaller, larger = larger)
 }
 

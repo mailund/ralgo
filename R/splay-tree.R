@@ -20,7 +20,6 @@ insert.splay_tree <- function(x, elm, ...) {
     return(x) # don't insert if we already have the element
 
   part <- partition(elm, x$tree)
-
   x$tree <- splay_tree_node(
     value = elm,
     left = part$smaller,
@@ -99,17 +98,17 @@ splay <- function(tree, v) {
                            a = s$left,
                            b = s$right,
                            c = tree$right$left,
-                           d = tree$right)) {
+                           d = tree$left)) {
     splay_tree_node(
       value = x,
       left = splay_tree_node(
         value = y,
         left = splay_tree_node(
           value = z,
-          left = a,
-          right = b),
-        right = c),
-      right = d)
+          left = d,
+          right = c),
+        right = a),
+      right = b)
 
   # -- Zig-zag & zag-zig ------------------------
   } else if (pattern_match(z = tree$value,
@@ -135,7 +134,7 @@ splay <- function(tree, v) {
                            b = s$left,
                            c = s$right,
                            d = tree$right$right)) {
-    splay_tree_node(
+  splay_tree_node(
       value = x,
       left = splay_tree_node(
         value = y,
