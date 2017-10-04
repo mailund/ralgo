@@ -21,11 +21,6 @@ insert.splay_tree <- function(x, elm, ...) {
 
   part <- partition(elm, x$tree)
 
-  if (!is_empty(part$smaller))
-    print(plot(part$smaller) + ggtitle("smaller"))
-  if (!is_empty(part$larger))
-    print(plot(part$larger) + ggtitle("larger"))
-
   x$tree <- splay_tree_node(
     value = elm,
     left = part$smaller,

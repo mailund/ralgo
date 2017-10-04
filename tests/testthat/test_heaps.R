@@ -32,6 +32,7 @@ test_heap <- function(empty) {
 
   for (x in sample(1:100))
     heap <- insert(heap, x)
+  expect_equal(size(heap), 100)
   v <- vector("numeric", length = 100)
   for (i in 1:100) {
     v[i] <- find_minimal(heap)
