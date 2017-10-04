@@ -1,3 +1,4 @@
+# nocov start
 
 node_number_annotate_tree <- function(tree, i = 1) {
   if (is_empty(tree)) {
@@ -76,3 +77,5 @@ plot.binary_tree <- function(x, ...) {
     geom_node_text(aes_(label = quote(value)), vjust = 0.4) +
     theme_graph()
 }
+
+# nocov end

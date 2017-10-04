@@ -115,7 +115,7 @@ ral_tree_update <- function(tree, tree_size, idx, value) {
     if (idx == 1)
       return(ral_binary_tree(value, NULL, NULL))
     # a leaf but idx is not one!
-    stop("Index error")
+    stop("Index error") # nocov
   }
 
   if (idx == 1) {
@@ -143,6 +143,7 @@ ral_tree_update <- function(tree, tree_size, idx, value) {
 #' @export
 ral_update <- function(ral, idx, value) {
   if (idx < 1) stop("Index out of bounds")
+  if (is.null(ral)) stop("Index out of bounds")
   if (idx <= ral$tree_size)
     ral_node(ral_tree_update(ral$tree, ral$tree_size, idx, value),
              ral$tree_size, ral$siblings)

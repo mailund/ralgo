@@ -91,6 +91,8 @@ test_that("We can access random indices", {
     for (i in 1:n)
       expect_equal(i, ral_lookup(lst, i))
   }
+
+  expect_error(ral_lookup(lst, 11), "Index out of bounds")
 })
 
 test_that("We can update at random indices", {
@@ -107,4 +109,7 @@ test_that("We can update at random indices", {
     }
 
   }
+  expect_error(ral_lookup(lst, 7), "Index out of bounds")
+  expect_error(ral_update(lst, 0, NA), "Index out of bounds")
+  expect_error(ral_update(lst, 7, NA), "Index out of bounds")
 })

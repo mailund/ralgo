@@ -201,5 +201,5 @@ member.splay_tree <- function(x, elm, ...) {
 #' @method plot splay_tree
 #' @export
 plot.splay_tree <- function(x, ...) {
-  plot(x$tree)
+  plot(x$tree) # nocov
 }
